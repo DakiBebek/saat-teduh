@@ -1,0 +1,98 @@
+/* Custom Styles & Design System untuk Aplikasi Saat Teduh */
+:root {
+  --primary-gold: #c29b38;
+  --primary-gold-dark: #9a7620;
+  --peaceful-sage: #52796f;
+  --bg-cream: #faf8f5;
+  --card-bg: #ffffff;
+  --text-dark: #292524;
+  --text-muted: #78716c;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Serif font untuk Alkitab & Ayat Emas */
+.font-serif-bible {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-display-title {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+}
+
+/* Warm Sepia Theme */
+body.theme-sepia {
+  --bg-cream: #f4ece1;
+  --card-bg: #fbf6ee;
+  --text-dark: #3a2e25;
+  --text-muted: #7d6b5c;
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+}
+
+/* Dark Sanctuary Theme */
+body.theme-dark {
+  --bg-cream: #0f1416;
+  --card-bg: #182023;
+  --text-dark: #f1f5f9;
+  --text-muted: #94a3b8;
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+}
+
+/* Equalizer Bars Animation untuk Ambient Audio */
+.equalizer-bar {
+  animation: equalize 1.2s infinite ease-in-out;
+}
+.equalizer-bar:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.equalizer-bar:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.equalizer-bar:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+@keyframes equalize {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+body.theme-dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+/* Print styles untuk Jurnal Khotbah & Refleksi */
+@media print {
+  header, nav, .no-print, button, #ambient-audio-controls {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+}
