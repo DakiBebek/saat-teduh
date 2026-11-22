@@ -299,6 +299,11 @@ function saveCurrentReflection() {
   };
 
   localStorage.setItem('st_reflections', JSON.stringify(AppState.reflections));
+
+  // Simpan ke Supabase jika terhubung
+  if (typeof saveReflectionToCloud === 'function') {
+    saveReflectionToCloud(AppState.reflections[isoKey]);
+  }
 }
 
 function showSaveNotification() {
@@ -571,6 +576,9 @@ function saveSermonNote() {
   }
 
   localStorage.setItem('st_sermons', JSON.stringify(AppState.sermons));
+  if (typeof saveSermonToCloud === 'function') {
+    saveSermonToCloud(sermonData);
+  }
   closeSermonModal();
   renderSermonList();
 }
@@ -579,6 +587,9 @@ function deleteSermon(id) {
   if (confirm('Apakah kamu yakin ingin menghapus catatan khotbah ini?')) {
     AppState.sermons = AppState.sermons.filter(s => s.id !== id);
     localStorage.setItem('st_sermons', JSON.stringify(AppState.sermons));
+    if (typeof deleteSermonFromCloud === 'function') {
+      deleteSermonFromCloud(id);
+    }
     renderSermonList();
   }
 }
