@@ -93,28 +93,66 @@ function continueAsGuest() {
 }
 
 function updateAuthUI(user) {
-  const authDesktop = document.getElementById('auth-header-container');
-  const authMobile = document.getElementById('auth-mobile-badge');
+  const accountCard = document.getElementById('settings-account-card');
+  if (!accountCard) return;
 
-  const content = user ? `
-    <div class="flex items-center gap-1.5">
-      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800" title="Terhubung: ${user.email}">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="max-w-[90px] truncate">${user.email.split('@')[0]}</span>
-      </span>
-      <button onclick="handleSignOut()" class="text-xs text-stone-500 dark:text-stone-400 hover:text-rose-600 p-1 font-medium" title="Keluar">
-        Keluar
-      </button>
-    </div>
-  ` : `
-    <button onclick="openLoginView()" class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm transition-all">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-      <span>Masuk Akun</span>
-    </button>
-  `;
+  if (user) {
+    const initial = (user.email ? user.email[0] : 'U').toUpperCase();
+    accountCard.innerHTML = `
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 font-bold text-lg flex items-center justify-center shrink-0">
+            ${initial}
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-0.5">
+              <h4 class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100 font-serif-bible">
+                Akun Terhubung
+              </h4>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Cloud Aktif
+              </span>
+            </div>
+            <p class="text-xs text-stone-600 dark:text-stone-300 font-medium break-all">
+              ${user.email}
+            </p>
+            <p class="text-[11px] text-stone-400 mt-1">
+              Refleksi & catatan khotbah tersinkron otomatis antar HP & Laptop.
+            </p>
+          </div>
+        </div>
 
-  if (authDesktop) authDesktop.innerHTML = content;
-  if (authMobile) authMobile.innerHTML = content;
+        <button onclick="handleSignOut()" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          <span>Keluar Akun (Logout)</span>
+        </button>
+      </div>
+    `;
+  } else {
+    accountCard.innerHTML = `
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <h4 class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100 font-serif-bible">
+              Akun & Sinkronisasi Cloud
+            </h4>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-stone-100 dark:bg-stone-700 text-stone-600 dark:text-stone-300">
+              Mode Tamu (Offline)
+            </span>
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+            Catatan saat ini hanya tersimpan di memori HP ini. Masuk atau buat akun agar otomatis tersimpan di cloud Supabase.
+          </p>
+        </div>
+
+        <button onclick="openLoginView()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm transition-all flex items-center justify-center gap-1.5 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+          <span>Masuk / Buat Akun Cloud</span>
+        </button>
+      </div>
+    `;
+  }
 }
 
 // -------------------------------------------------------------

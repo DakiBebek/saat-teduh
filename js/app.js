@@ -884,6 +884,11 @@ function setupSettingsHandlers() {
 }
 
 function renderSettingsView() {
+  // Update akun di tab pengaturan
+  if (typeof updateAuthUI === 'function' && typeof currentUser !== 'undefined') {
+    updateAuthUI(currentUser);
+  }
+
   // Update state tombol tema
   document.querySelectorAll('[data-theme-choice]').forEach(btn => {
     const isCur = btn.getAttribute('data-theme-choice') === AppState.theme;
