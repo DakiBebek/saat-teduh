@@ -1,6 +1,8 @@
 /**
  * Integrasi Supabase Cloud Database & Auth
- * Sinkronisasi data Saat Teduh dan Jurnal Khotbah antar perangkat (HP & Laptop).
+ * - Halaman Login / Registrasi Otomatis (Gated App)
+ * - Registrasi Langsung Masuk (Tanpa perlu verifikasi email)
+ * - Sinkronisasi data Saat Teduh dan Jurnal Khotbah antar perangkat (HP & Laptop)
  */
 
 const SUPABASE_URL = "https://ivxdcsdhucbpmvolbmuy.supabase.co";
@@ -16,6 +18,8 @@ function initSupabase() {
     setupAuthListeners();
   } else {
     console.warn("Supabase SDK belum dimuat.");
+    // Fallback: biarkan mode lokal berjalan jika offline
+    toggleAppVisibility(true);
   }
 }
 
@@ -26,14 +30,23 @@ async function checkSession() {
     const { data: { session }, error } = await supabaseClient.auth.getSession();
     if (session && session.user) {
       currentUser = session.user;
+      toggleAppVisibility(true);
       updateAuthUI(currentUser);
       syncFromCloud();
     } else {
       currentUser = null;
-      updateAuthUI(null);
+      // Periksa apakah pengguna memilih mode tamu
+      const isGuest = sessionStorage.getItem('st_guest_mode') === 'true';
+      if (isGuest) {
+        toggleAppVisibility(true);
+        updateAuthUI(null);
+      } else {
+        toggleAppVisibility(false); // Tampilkan halaman login
+      }
     }
   } catch (err) {
     console.error("Gagal memeriksa sesi Supabase:", err);
+    toggleAppVisibility(true);
   }
 }
 
@@ -42,48 +55,71 @@ function setupAuthListeners() {
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (session && session.user) {
       currentUser = session.user;
+      sessionStorage.removeItem('st_guest_mode');
+      toggleAppVisibility(true);
       updateAuthUI(currentUser);
       await syncLocalToCloud();
       await syncFromCloud();
     } else {
       currentUser = null;
-      updateAuthUI(null);
+      const isGuest = sessionStorage.getItem('st_guest_mode') === 'true';
+      if (!isGuest) {
+        toggleAppVisibility(false);
+      } else {
+        updateAuthUI(null);
+      }
     }
   });
 }
 
-function updateAuthUI(user) {
-  const authContainer = document.getElementById('auth-header-container');
-  if (!authContainer) return;
+// Mengatur visibilitas antara Halaman Login vs Halaman Utama Aplikasi
+function toggleAppVisibility(isLoggedInOrGuest) {
+  const loginScreen = document.getElementById('login-screen');
+  const appContainer = document.getElementById('app-container');
 
-  if (user) {
-    const emailShort = user.email ? user.email.split('@')[0] : 'Akun';
-    authContainer.innerHTML = `
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800" title="Cloud Terhubung: ${user.email}">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="max-w-[100px] truncate">${emailShort}</span>
-        </span>
-        <button onclick="handleSignOut()" class="text-xs text-stone-500 dark:text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 p-1" title="Keluar Akun">
-          Keluar
-        </button>
-      </div>
-    `;
+  if (isLoggedInOrGuest) {
+    if (loginScreen) loginScreen.classList.add('hidden');
+    if (appContainer) appContainer.classList.remove('hidden');
   } else {
-    authContainer.innerHTML = `
-      <button onclick="openAuthModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition-all" title="Masuk untuk sinkronisasi otomatis antar HP & Laptop">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-        <span>Sinkron Cloud</span>
-      </button>
-    `;
+    if (loginScreen) loginScreen.classList.remove('hidden');
+    if (appContainer) appContainer.classList.add('hidden');
   }
+}
+
+function continueAsGuest() {
+  sessionStorage.setItem('st_guest_mode', 'true');
+  toggleAppVisibility(true);
+  updateAuthUI(null);
+}
+
+function updateAuthUI(user) {
+  const authDesktop = document.getElementById('auth-header-container');
+  const authMobile = document.getElementById('auth-mobile-badge');
+
+  const content = user ? `
+    <div class="flex items-center gap-1.5">
+      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800" title="Terhubung: ${user.email}">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="max-w-[90px] truncate">${user.email.split('@')[0]}</span>
+      </span>
+      <button onclick="handleSignOut()" class="text-xs text-stone-500 dark:text-stone-400 hover:text-rose-600 p-1 font-medium" title="Keluar">
+        Keluar
+      </button>
+    </div>
+  ` : `
+    <button onclick="openLoginView()" class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm transition-all">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+      <span>Masuk Akun</span>
+    </button>
+  `;
+
+  if (authDesktop) authDesktop.innerHTML = content;
+  if (authMobile) authMobile.innerHTML = content;
 }
 
 // -------------------------------------------------------------
 // SINKRONISASI DATA LOCALSTORAGE <-> SUPABASE
 // -------------------------------------------------------------
-
-// Tarik data dari Supabase Cloud ke LocalStorage
 async function syncFromCloud() {
   if (!supabaseClient || !currentUser) return;
 
@@ -123,9 +159,7 @@ async function syncFromCloud() {
 
     if (!errSerm && cloudSermons) {
       const sermonMap = new Map();
-      // Tambahkan lokal dulu
       AppState.sermons.forEach(s => sermonMap.set(s.id, s));
-      // Timpa atau tambah dari cloud
       cloudSermons.forEach(row => {
         sermonMap.set(row.id, {
           id: row.id,
@@ -146,15 +180,13 @@ async function syncFromCloud() {
       localStorage.setItem('st_sermons', JSON.stringify(AppState.sermons));
     }
 
-    // Render ulang tampilan aktif
-    renderCurrentTab();
-    updateStreakDisplay();
+    if (typeof renderCurrentTab === 'function') renderCurrentTab();
+    if (typeof updateStreakDisplay === 'function') updateStreakDisplay();
   } catch (err) {
     console.error("Gagal sinkron dari cloud:", err);
   }
 }
 
-// Unggah data lokal yang ada saat pertama kali login ke Cloud
 async function syncLocalToCloud() {
   if (!supabaseClient || !currentUser) return;
 
@@ -181,7 +213,6 @@ async function syncLocalToCloud() {
 
     // 2. Upload Khotbah Lokal
     for (const s of AppState.sermons) {
-      // Pastikan format id UUID valid untuk supabase
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s.id);
       const rowId = isUuid ? s.id : undefined;
 
@@ -205,7 +236,6 @@ async function syncLocalToCloud() {
   }
 }
 
-// Simpan SATU refleksi ke Supabase saat diedit
 async function saveReflectionToCloud(reflectionData) {
   if (!supabaseClient || !currentUser) return;
   try {
@@ -227,7 +257,6 @@ async function saveReflectionToCloud(reflectionData) {
   }
 }
 
-// Simpan SATU catatan khotbah ke Supabase
 async function saveSermonToCloud(sermonData) {
   if (!supabaseClient || !currentUser) return;
   try {
@@ -257,7 +286,6 @@ async function saveSermonToCloud(sermonData) {
   }
 }
 
-// Hapus catatan khotbah dari Supabase
 async function deleteSermonFromCloud(sermonId) {
   if (!supabaseClient || !currentUser) return;
   try {
@@ -268,63 +296,124 @@ async function deleteSermonFromCloud(sermonId) {
 }
 
 // -------------------------------------------------------------
-// AUTH MODAL HANDLERS
+// AUTH ACTIONS: LOGIN, REGISTER (TANPA VERIFIKASI EMAIL), LOGOUT
 // -------------------------------------------------------------
-function openAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closeAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (modal) modal.classList.add('hidden');
-}
-
-async function handleSignIn(email, password) {
+async function handleLoginSubmit(event) {
+  event.preventDefault();
   if (!supabaseClient) return;
-  const msgEl = document.getElementById('auth-error-msg');
-  if (msgEl) msgEl.textContent = '';
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const isRegisterMode = document.getElementById('auth-mode-toggle').dataset.mode === 'register';
+  const msgEl = document.getElementById('login-status-message');
+  const submitBtn = document.getElementById('btn-auth-submit');
 
-  if (error) {
-    if (msgEl) msgEl.textContent = error.message;
-  } else {
-    closeAuthModal();
+  msgEl.className = "text-xs font-medium";
+  msgEl.textContent = isRegisterMode ? "Sedang mendaftarkan akun..." : "Sedang masuk...";
+  submitBtn.disabled = true;
+
+  try {
+    if (isRegisterMode) {
+      // 1. Registrasi Akun
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password
+      });
+
+      if (error) {
+        msgEl.className = "text-xs font-medium text-rose-600 dark:text-rose-400";
+        msgEl.textContent = `Pendaftaran gagal: ${error.message}`;
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // 2. Langsung Auto-Login tanpa menunggu verifikasi email!
+      const { data: loginData, error: loginErr } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (!loginErr && loginData.session) {
+        currentUser = loginData.session.user;
+        toggleAppVisibility(true);
+        updateAuthUI(currentUser);
+      } else {
+        // Jika login langsung berhasil atau butuh 1 klik
+        msgEl.className = "text-xs font-medium text-emerald-600 dark:text-emerald-400";
+        msgEl.textContent = "Pendaftaran sukses! Sedang memuat saat teduh...";
+        setTimeout(() => {
+          checkSession();
+        }, 800);
+      }
+    } else {
+      // Login Biasa
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        msgEl.className = "text-xs font-medium text-rose-600 dark:text-rose-400";
+        msgEl.textContent = `Gagal masuk: ${error.message}`;
+        submitBtn.disabled = false;
+        return;
+      }
+
+      currentUser = data.user;
+      toggleAppVisibility(true);
+      updateAuthUI(currentUser);
+    }
+  } catch (e) {
+    msgEl.className = "text-xs font-medium text-rose-600 dark:text-rose-400";
+    msgEl.textContent = "Terjadi kesalahan koneksi. Silakan coba lagi.";
+  } finally {
+    submitBtn.disabled = false;
   }
 }
 
-async function handleSignUp(email, password) {
-  if (!supabaseClient) return;
-  const msgEl = document.getElementById('auth-error-msg');
-  if (msgEl) msgEl.textContent = '';
+function toggleAuthMode() {
+  const toggleBtn = document.getElementById('auth-mode-toggle');
+  const title = document.getElementById('auth-card-title');
+  const subtitle = document.getElementById('auth-card-subtitle');
+  const submitBtn = document.getElementById('btn-auth-submit');
+  const msgEl = document.getElementById('login-status-message');
+  msgEl.textContent = '';
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password
-  });
+  const isRegister = toggleBtn.dataset.mode === 'register';
 
-  if (error) {
-    if (msgEl) msgEl.textContent = error.message;
+  if (isRegister) {
+    // Ubah ke mode LOGIN
+    toggleBtn.dataset.mode = 'login';
+    title.textContent = 'Masuk ke Saat Teduh';
+    subtitle.textContent = 'Lanjutkan perjalanan rohani dan renungan harianmu.';
+    submitBtn.textContent = 'Masuk (Login)';
+    toggleBtn.innerHTML = 'Belum punya akun? <span class="font-bold underline text-amber-600">Daftar Baru (Tanpa Verifikasi)</span>';
   } else {
-    alert('Pendaftaran berhasil! Akun Anda sudah aktif dan siap sinkron.');
-    closeAuthModal();
+    // Ubah ke mode REGISTER
+    toggleBtn.dataset.mode = 'register';
+    title.textContent = 'Buat Akun Saat Teduh';
+    subtitle.textContent = 'Daftar instan tanpa ribet, langsung aktif tanpa tunggu email.';
+    submitBtn.textContent = 'Daftar & Langsung Masuk';
+    toggleBtn.innerHTML = 'Sudah punya akun? <span class="font-bold underline text-amber-600">Masuk di sini</span>';
   }
+}
+
+function openLoginView() {
+  sessionStorage.removeItem('st_guest_mode');
+  toggleAppVisibility(false);
 }
 
 async function handleSignOut() {
   if (!supabaseClient) return;
-  if (confirm('Keluar dari akun Supabase? Catatan di perangkat ini akan tetap tersimpan.')) {
+  if (confirm('Keluar dari akun? Catatan Anda tetap tersimpan aman di cloud.')) {
     await supabaseClient.auth.signOut();
     currentUser = null;
-    updateAuthUI(null);
+    sessionStorage.removeItem('st_guest_mode');
+    toggleAppVisibility(false);
   }
 }
 
-// Jalankan inisialisasi saat window dimuat
+// Inisialisasi saat window dimuat
 window.addEventListener('DOMContentLoaded', () => {
   initSupabase();
 });

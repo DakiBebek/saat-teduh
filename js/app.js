@@ -45,8 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupNavigation() {
   const navButtons = document.querySelectorAll('[data-tab-target]');
   navButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       const target = btn.getAttribute('data-tab-target');
+      switchTab(target);
+    });
+  });
+
+  const mobileNavButtons = document.querySelectorAll('[data-mobile-tab-target]');
+  mobileNavButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-mobile-tab-target');
       switchTab(target);
     });
   });
@@ -55,7 +63,7 @@ function setupNavigation() {
 function switchTab(tabName) {
   AppState.currentTab = tabName;
 
-  // Update styling tombol navigasi
+  // Update styling tombol navigasi desktop
   document.querySelectorAll('[data-tab-target]').forEach(btn => {
     const isTarget = btn.getAttribute('data-tab-target') === tabName;
     if (isTarget) {
@@ -67,12 +75,27 @@ function switchTab(tabName) {
     }
   });
 
+  // Update styling navigasi bawah di HP (Mobile Bottom Nav)
+  document.querySelectorAll('[data-mobile-tab-target]').forEach(btn => {
+    const isTarget = btn.getAttribute('data-mobile-tab-target') === tabName;
+    if (isTarget) {
+      btn.classList.add('text-amber-600', 'dark:text-amber-400', 'font-bold');
+      btn.classList.remove('text-stone-400', 'dark:text-stone-500');
+    } else {
+      btn.classList.remove('text-amber-600', 'dark:text-amber-400', 'font-bold');
+      btn.classList.add('text-stone-400', 'dark:text-stone-500');
+    }
+  });
+
   // Tampilkan tab view yang sesuai
   document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
   const activeView = document.getElementById(`tab-${tabName}`);
   if (activeView) {
     activeView.classList.remove('hidden');
   }
+
+  // Scroll kembali ke atas halaman saat ganti tab (terutama di layar HP)
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Render konten tab
   renderCurrentTab();

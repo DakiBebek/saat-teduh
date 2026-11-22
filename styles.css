@@ -14,6 +14,7 @@ body {
   background-color: var(--bg-cream);
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Serif font untuk Alkitab & Ayat Emas */
@@ -23,6 +24,20 @@ body {
 
 .font-display-title {
   font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+}
+
+/* Mobile Safe Area Padding */
+.safe-area-pb {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+/* Mobile active tab indicator */
+.mobile-nav-item.active {
+  color: #c29b38;
+  font-weight: 700;
+}
+.mobile-nav-item.active svg {
+  stroke: #c29b38;
 }
 
 /* Warm Sepia Theme */
@@ -66,8 +81,8 @@ body.theme-dark {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -80,19 +95,21 @@ body.theme-dark ::-webkit-scrollbar-thumb {
   background: #334155;
 }
 
+/* Mobile Touch Optimizations */
+@media (max-width: 640px) {
+  button, input, textarea, select {
+    font-size: 16px !important; /* Mencegah auto-zoom di iOS Safari */
+  }
+}
+
 /* Print styles untuk Jurnal Khotbah & Refleksi */
 @media print {
-  header, nav, .no-print, button, #ambient-audio-controls {
+  header, nav, .no-print, button, #ambient-audio-controls, #mobile-bottom-nav {
     display: none !important;
   }
   body {
     background: #ffffff !important;
     color: #000000 !important;
     font-size: 12pt;
-  }
-  .print-page {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
   }
 }
