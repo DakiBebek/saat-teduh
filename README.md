@@ -2,6 +2,8 @@
 
 Aplikasi web modern untuk Saat Teduh Kristen harian, dilengkapi refleksi pribadi interaktif, Verse of the Day, dan Jurnal Mingguan Catatan Khotbah Gereja.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDakiBebek%2Fsaat-teduh)
+
 ---
 
 ## 🌟 Fitur Utama
