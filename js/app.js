@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupReflectionAutosave();
   setupSermonHandlers();
   setupSettingsHandlers();
+  setupNotificationSettings();
 
   // Periksa apakah pop-up ayat emas hari ini perlu ditampilkan
   if (typeof checkDailyVersePopup === 'function') {
@@ -544,12 +545,14 @@ function openDailyVersePopup() {
   if (passageEl) passageEl.textContent = `— ${verse.passage} (TB)`;
   if (promptEl) promptEl.textContent = verse.reflectionPrompt;
 
+  modal.style.display = 'flex';
   modal.classList.remove('hidden');
 }
 
 function closeDailyVersePopup(markAsSeenToday = true) {
   const modal = document.getElementById('verse-popup-modal');
   if (modal) {
+    modal.style.display = 'none';
     modal.classList.add('hidden');
   }
   if (markAsSeenToday) {
@@ -1144,3 +1147,60 @@ function setupAudioControls() {
     });
   }
 }
+
+// -------------------------------------------------------------
+// PENGINGAT NOTIFIKASI SAAT TEDUH (SETTINGS TAB)
+// -------------------------------------------------------------
+function setupNotificationSettings() {
+  const toggle = document.getElementById('toggle-notif-enabled');
+  const timePicker = document.getElementById('notif-time-picker');
+  const testBtn = document.getElementById('btn-test-notification');
+
+  if (!window.NotificationManager) return;
+
+  const currentSettings = window.NotificationManager.getSettings();
+  if (toggle) toggle.checked = currentSettings.enabled;
+  if (timePicker) timePicker.value = currentSettings.time || '06:00';
+
+  if (toggle) {
+    toggle.addEventListener('change', async (e) => {
+      if (e.target.checked) {
+        const granted = await window.NotificationManager.requestPermission();
+        if (!granted) {
+          e.target.checked = false;
+          alert('Izin notifikasi tidak diberikan. Harap aktifkan izin notifikasi pada pengaturan browser / ponsel Anda.');
+          return;
+        }
+        const settings = window.NotificationManager.getSettings();
+        settings.enabled = true;
+        window.NotificationManager.saveSettings(settings);
+      } else {
+        const settings = window.NotificationManager.getSettings();
+        settings.enabled = false;
+        window.NotificationManager.saveSettings(settings);
+      }
+    });
+  }
+
+  if (timePicker) {
+    timePicker.addEventListener('change', (e) => {
+      const settings = window.NotificationManager.getSettings();
+      settings.time = e.target.value;
+      window.NotificationManager.saveSettings(settings);
+    });
+  }
+
+  if (testBtn) {
+    testBtn.addEventListener('click', () => {
+      window.NotificationManager.sendTestNotification();
+    });
+  }
+}
+
+// Expose fungsi pop up ke window scope agar aman dipanggil dari mana saja
+window.openDailyVersePopup = openDailyVersePopup;
+window.closeDailyVersePopup = closeDailyVersePopup;
+window.copyPopupVerse = copyPopupVerse;
+window.sharePopupVerseWhatsApp = sharePopupVerseWhatsApp;
+window.checkDailyVersePopup = checkDailyVersePopup;
+
