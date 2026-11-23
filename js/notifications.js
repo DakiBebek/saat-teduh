@@ -1,16 +1,14 @@
 /**
- * Sistem Pengingat Saat Teduh (Web Notification API)
- * Memungkinkan pengguna mengatur jam pengingat harian di HP/Browser
+ * Sistem Pengingat Saat Teduh (Web Notification API + Fallback Banner Toast)
  */
 
 const NotificationManager = {
   SETTINGS_KEY: 'st_notification_settings',
   
-  // Ambil pengaturan yang tersimpan
   getSettings() {
     const defaultSettings = {
       enabled: false,
-      time: '06:00', // Default jam 6 pagi
+      time: '06:00',
       lastNotifiedDate: ''
     };
     try {
@@ -21,7 +19,6 @@ const NotificationManager = {
     }
   },
 
-  // Simpan pengaturan
   saveSettings(settings) {
     try {
       localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
@@ -30,30 +27,63 @@ const NotificationManager = {
     }
   },
 
-  // Periksa dukungan Web Notification
   isSupported() {
-    return 'Notification' in window;
+    return typeof window !== 'undefined' && 'Notification' in window;
   },
 
-  // Request izin notifikasi
-  async requestPermission() {
-    if (!this.isSupported()) {
-      alert('Browser di perangkat ini tidak mendukung Web Notification.');
-      return false;
+  // Banner toast in-app yang selalu pasti muncul di layar HP
+  showInAppToast(title, body) {
+    const existing = document.getElementById('st-inapp-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'st-inapp-toast';
+    toast.className = 'fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl border border-amber-500/40 flex items-start gap-3 transform transition-all duration-300 animate-bounce';
+    toast.style.animationIterationCount = '1';
+    toast.innerHTML = `
+      <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-xl">
+        🔔
+      </div>
+      <div class="flex-1">
+        <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif-bible">${title}</h4>
+        <p class="text-[11px] sm:text-xs text-stone-200 mt-1 leading-snug">${body}</p>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-stone-400 hover:text-white p-1 text-xs">✕</button>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Getar HP jika didukung
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate([200, 100, 200]); } catch (e) {}
     }
 
+    // Auto dismiss setelah 7 detik
+    setTimeout(() => {
+      if (toast && toast.parentElement) {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 7000);
+  },
+
+  async requestPermission() {
+    if (!this.isSupported()) return false;
     try {
-      const permission = await Notification.requestPermission();
+      let permission = Notification.permission;
+      if (permission === 'default') {
+        permission = await Notification.requestPermission();
+      }
       return permission === 'granted';
     } catch (e) {
-      console.error('Error saat meminta izin notifikasi:', e);
+      console.error('Error requestPermission:', e);
       return false;
     }
   },
 
-  // Tampilkan notifikasi langsung (bisa via Service Worker atau new Notification)
   async showNotification(title, options = {}) {
     const defaultOptions = {
+      body: options.body || 'Waktunya saat teduh dan berdoa bersama Tuhan.',
       icon: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=192&auto=format&fit=crop&q=80',
       badge: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=96&auto=format&fit=crop&q=80',
       vibrate: [200, 100, 200],
@@ -62,59 +92,56 @@ const NotificationManager = {
       ...options
     };
 
+    let sent = false;
+
+    // Coba Service Worker notification
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.ready;
         if (registration && registration.showNotification) {
-          return registration.showNotification(title, defaultOptions);
+          await registration.showNotification(title, defaultOptions);
+          sent = true;
         }
       } catch (e) {
-        console.warn('Fallback ke new Notification:', e);
+        console.warn('SW notification fallback:', e);
       }
     }
 
-    if (this.isSupported() && Notification.permission === 'granted') {
+    // Coba new Notification jika SW belum ready
+    if (!sent && this.isSupported() && Notification.permission === 'granted') {
       try {
-        return new Notification(title, defaultOptions);
+        new Notification(title, defaultOptions);
+        sent = true;
       } catch (err) {
-        console.error('Gagal memicu Notification:', err);
+        console.warn('new Notification fallback:', err);
       }
     }
+
+    // Selalu tampilkan In-App Toast juga agar pengguna langsung melihat hasil uji coba di layar HP!
+    this.showInAppToast(title, defaultOptions.body);
+
+    return sent;
   },
 
-  // Kirim tes notifikasi
   async sendTestNotification() {
-    if (!this.isSupported()) {
-      alert('Browser ini tidak mendukung notifikasi.');
-      return;
-    }
-
-    if (Notification.permission !== 'granted') {
-      const granted = await this.requestPermission();
-      if (!granted) {
-        alert('Izin notifikasi belum diberikan. Silakan izinkan di setelan browser atau sistem HP Anda.');
-        return;
-      }
-    }
-
-    // Ambil ayat hari ini sebagai isi notifikasi
     const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(new Date()) : null;
     const body = verse 
-      ? `"${verse.text.slice(0, 85)}..." — ${verse.passage}`
-      : 'Waktunya mengambil waktu hening sejenak bersama Tuhan hari ini.';
+      ? `"${verse.text.slice(0, 90)}..." — ${verse.passage}`
+      : 'Waktunya saat teduh dan mendekat kepada Tuhan hari ini.';
 
-    await this.showNotification('Saat Teduh Kristen 🕊️', {
-      body: body,
-      data: { url: window.location.href }
-    });
+    // Minta izin jika belum
+    if (this.isSupported() && Notification.permission !== 'granted') {
+      try {
+        await this.requestPermission();
+      } catch (e) {}
+    }
 
-    alert('🔔 Notifikasi percobaan telah dikirim ke perangkat Anda!');
+    await this.showNotification('Saat Teduh Kristen 🕊️', { body });
   },
 
-  // Cek apakah waktu sekarang cocok dengan waktu pengingat
   checkAndNotify() {
     const settings = this.getSettings();
-    if (!settings.enabled || Notification.permission !== 'granted') return;
+    if (!settings.enabled) return;
 
     const now = new Date();
     const currentHours = String(now.getHours()).padStart(2, '0');
@@ -122,45 +149,54 @@ const NotificationManager = {
     const currentTimeStr = `${currentHours}:${currentMinutes}`;
     const todayIso = typeof getIsoDate === 'function' ? getIsoDate(now) : now.toISOString().split('T')[0];
 
-    // Jika jam sama dan belum ternotifikasi hari ini
     if (currentTimeStr === settings.time && settings.lastNotifiedDate !== todayIso) {
       settings.lastNotifiedDate = todayIso;
       this.saveSettings(settings);
 
       const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(now) : null;
       const body = verse
-        ? `Waktunya saat teduh: "${verse.text.slice(0, 80)}..." — ${verse.passage}`
+        ? `Waktunya saat teduh: "${verse.text.slice(0, 85)}..." — ${verse.passage}`
         : 'Mari hening sejenak, berdoa, dan merenungkan firman Tuhan hari ini.';
 
-      this.showNotification('Waktunya Saat Teduh 🕊️', {
-        body: body,
-        data: { url: window.location.href }
-      });
+      this.showNotification('Waktunya Saat Teduh 🕊️', { body });
     }
   },
 
-  // Inisialisasi Service Worker & Interval Pengingat
   init() {
-    // Daftarkan service worker jika didukung
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(err => {
-        console.warn('Gagal mendaftarkan service worker:', err);
+        console.warn('Service worker register error:', err);
       });
     }
 
-    // Interval cek setiap 30 detik untuk akurasi waktu
     setInterval(() => {
       this.checkAndNotify();
     }, 30000);
 
-    // Cek langsung saat pertama dibuka
     this.checkAndNotify();
   }
 };
 
-// Jalankan init
+// Global helper function dipanggil langsung oleh tombol
+function triggerTestNotification(btn) {
+  if (btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span>⏳</span> <span>Mengirim...</span>';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 1500);
+  }
+
+  if (window.NotificationManager) {
+    window.NotificationManager.sendTestNotification();
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.NotificationManager = NotificationManager;
+  window.triggerTestNotification = triggerTestNotification;
   document.addEventListener('DOMContentLoaded', () => {
     NotificationManager.init();
   });
