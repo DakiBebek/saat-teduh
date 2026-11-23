@@ -153,6 +153,11 @@ function updateAuthUI(user) {
       </div>
     `;
   }
+
+  // Sinkronkan UI Notifikasi saat status akun dimuat
+  if (window.syncNotificationUI) {
+    window.syncNotificationUI();
+  }
 }
 
 // -------------------------------------------------------------

@@ -1,10 +1,20 @@
 /**
  * Sistem Pengingat Saat Teduh (Web Notification API + Fallback Banner Toast)
+ * Data pengaturan disimpan per-akun (User ID / Email)
  */
 
 const NotificationManager = {
-  SETTINGS_KEY: 'st_notification_settings',
-  
+  // Ambil key penyimpanan berdasarkan akun saat ini
+  getStorageKey() {
+    let userId = 'guest';
+    if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) {
+      userId = currentUser.id;
+    } else if (typeof currentUser !== 'undefined' && currentUser && currentUser.email) {
+      userId = currentUser.email;
+    }
+    return `st_notif_settings_${userId}`;
+  },
+
   getSettings() {
     const defaultSettings = {
       enabled: false,
@@ -12,10 +22,10 @@ const NotificationManager = {
       lastNotifiedDate: ''
     };
     try {
-      const saved = localStorage.getItem(this.SETTINGS_KEY);
+      const key = this.getStorageKey();
+      const saved = localStorage.getItem(key);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        return { ...defaultSettings, ...parsed };
+        return { ...defaultSettings, ...JSON.parse(saved) };
       }
       return defaultSettings;
     } catch (e) {
@@ -25,7 +35,8 @@ const NotificationManager = {
 
   saveSettings(settings) {
     try {
-      localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
+      const key = this.getStorageKey();
+      localStorage.setItem(key, JSON.stringify(settings));
     } catch (e) {
       console.error('Gagal menyimpan pengaturan notifikasi', e);
     }
@@ -42,8 +53,7 @@ const NotificationManager = {
 
     const toast = document.createElement('div');
     toast.id = 'st-inapp-toast';
-    toast.className = 'fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl border border-amber-500/40 flex items-start gap-3 transform transition-all duration-300 animate-bounce';
-    toast.style.animationIterationCount = '1';
+    toast.className = 'fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl border border-amber-500/40 flex items-start gap-3 transform transition-all duration-300';
     toast.innerHTML = `
       <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-xl">
         🔔
@@ -72,7 +82,7 @@ const NotificationManager = {
   },
 
   async requestPermission() {
-    if (!this.isSupported()) return true; // tetap return true agar setting tersimpan dan in-app toast bekerja
+    if (!this.isSupported()) return false;
     try {
       let permission = Notification.permission;
       if (permission === 'default') {
@@ -81,15 +91,15 @@ const NotificationManager = {
       return permission === 'granted';
     } catch (e) {
       console.warn('requestPermission fallback:', e);
-      return true;
+      return false;
     }
   },
 
   async showNotification(title, options = {}) {
     const defaultOptions = {
       body: options.body || 'Waktunya saat teduh dan berdoa bersama Tuhan.',
-      icon: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=192&auto=format&fit=crop&q=80',
-      badge: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=96&auto=format&fit=crop&q=80',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
       vibrate: [200, 100, 200],
       tag: 'saat-teduh-reminder',
       renotify: true,
