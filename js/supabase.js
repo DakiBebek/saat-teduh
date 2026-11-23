@@ -80,6 +80,11 @@ function toggleAppVisibility(isLoggedInOrGuest) {
   if (isLoggedInOrGuest) {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appContainer) appContainer.classList.remove('hidden');
+
+    // Munculkan Pop-up Ayat Hari Ini bila dibuka pertama kali hari ini
+    if (typeof checkDailyVersePopup === 'function') {
+      checkDailyVersePopup();
+    }
   } else {
     if (loginScreen) loginScreen.classList.remove('hidden');
     if (appContainer) appContainer.classList.add('hidden');
@@ -90,6 +95,9 @@ function continueAsGuest() {
   sessionStorage.setItem('st_guest_mode', 'true');
   toggleAppVisibility(true);
   updateAuthUI(null);
+  if (typeof checkDailyVersePopup === 'function') {
+    checkDailyVersePopup();
+  }
 }
 
 function updateAuthUI(user) {
