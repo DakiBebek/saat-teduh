@@ -11,6 +11,7 @@
   <meta name="theme-color" content="#c29b38">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.json">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,26 +250,40 @@
         <!-- Devotional Reading Card -->
         <article class="bg-white dark:bg-stone-800 rounded-2xl sm:rounded-3xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden transition-all">
           
-          <!-- Header Banner Renungan -->
-          <div class="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-4 sm:p-7 border-b border-stone-100 dark:border-stone-700/80">
-            <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2">
-              <span id="devo-theme-badge" class="px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+          <!-- Foto Ilustrasi Sesuai Tema Renungan -->
+          <div class="relative w-full h-44 sm:h-64 overflow-hidden bg-stone-900 group">
+            <img id="devo-image" src="" alt="Ilustrasi Renungan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-0 transition-opacity duration-500" loading="eager" onload="this.classList.remove('opacity-0')">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none"></div>
+            
+            <!-- Floating Theme Badge & Image Caption -->
+            <div class="absolute bottom-3 left-3.5 right-3.5 sm:bottom-4 sm:left-6 sm:right-6 flex items-end justify-between gap-2">
+              <span id="devo-theme-badge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-black/60 backdrop-blur-md text-amber-300 border border-amber-400/40 shadow-sm">
                 Tema Renungan
               </span>
-              <span id="devo-date-display" class="text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400">
-                Tanggal
+              <span id="devo-image-caption" class="text-[10px] sm:text-xs text-stone-300/90 italic backdrop-blur-md bg-black/50 px-2.5 py-0.5 rounded-full line-clamp-1 max-w-[200px] sm:max-w-none text-right">
+                Ilustrasi Renungan
+              </span>
+            </div>
+          </div>
+
+          <!-- Header Konten Renungan -->
+          <div class="p-4 sm:p-7 border-b border-stone-100 dark:border-stone-700/80">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400 mb-2">
+              <span id="devo-date-display">Tanggal</span>
+              <span class="text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1">
+                <span>🕊️</span> Saat Teduh Harian
               </span>
             </div>
 
-            <h2 id="devo-title" class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 font-serif-bible tracking-tight mb-2 leading-snug">
+            <h2 id="devo-title" class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 font-serif-bible tracking-tight mb-2.5 leading-snug">
               Judul Renungan
             </h2>
 
-            <div class="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-400">
-              <span>Nats:</span>
+            <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-400">
+              <span>Nats Firman:</span>
               <span id="devo-passage" class="underline decoration-amber-500/40"></span>
-              <a id="devo-bible-link" href="#" target="_blank" class="inline-flex items-center text-[11px] px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 hover:bg-amber-200">
-                Alkitab ↗
+              <a id="devo-bible-link" href="#" target="_blank" class="inline-flex items-center text-[11px] px-2.5 py-0.5 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 hover:bg-amber-200 transition-colors">
+                Buka Alkitab ↗
               </a>
             </div>
           </div>

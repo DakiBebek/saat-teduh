@@ -180,6 +180,23 @@ function renderDevotionalView() {
   const isoKey = getIsoDate(AppState.selectedDate);
   const savedReflection = AppState.reflections[isoKey] || {};
 
+  // Update foto ilustrasi renungan yang se-tema
+  const devoImage = document.getElementById('devo-image');
+  const devoImageCaption = document.getElementById('devo-image-caption');
+  if (devoImage) {
+    devoImage.classList.add('opacity-0');
+    const fallbackImage = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80';
+    devoImage.src = devotional.image || fallbackImage;
+    devoImage.alt = devotional.title;
+    devoImage.onerror = function() {
+      this.src = fallbackImage;
+      this.classList.remove('opacity-0');
+    };
+  }
+  if (devoImageCaption) {
+    devoImageCaption.textContent = devotional.imageCaption || devotional.theme;
+  }
+
   // Update metadata header
   document.getElementById('devo-date-display').textContent = devotional.dateString;
   document.getElementById('devo-theme-badge').textContent = devotional.theme;

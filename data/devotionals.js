@@ -7,6 +7,8 @@ const DEVOTIONAL_ARCHIVE = [
     passage: "Markus 4:35-41",
     keyVerse: "Lalu Ia bangun, menghardik angin itu dan berkata kepada danau itu: 'Diam! Tenanglah!' Lalu angin itu reda dan danau itu menjadi sunyi senyap sekali.",
     verseRef: "Markus 4:39",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Ketenangan di atas danau dan cakrawala laut",
     content: `Ketika murid-murid berlayar menyeberang danau bersama Yesus, tiba-tiba taufan dahsyat mengamuk. Ombak menyembur masuk ke dalam perahu hingga perahu itu mulai penuh dengan air. Menariknya, Yesus sedang tidur di buritan beralaskan bantal. Dalam kepanikan, murid-murid membangunkan-Nya dengan seruan ketakutan: "Guru, tidakkah Engkau peduli kalau kita binasa?"
 
 Kerap kali dalam perjalanan hidup kita, badai persoalan datang tanpa peringatan sebelumnya. Masalah finansial, konflik keluarga, penyakit, atau ketidakpastian masa depan seolah menenggelamkan perahu kehidupan kita. Pada saat-saat seperti itu, kita tergoda untuk merasa bahwa Tuhan sedang "tertidur" atau tidak mempedulikan nasib kita.
@@ -29,6 +31,8 @@ Kehadiran Yesus di dalam perahu tidak menjamin bahwa badai tidak akan datang, te
     passage: "Yesaya 40:27-31",
     keyVerse: "Tetapi orang-orang yang menanti-nantikan TUHAN mendapat kekuatan baru: mereka seumpama rajawali yang naik terbang dengan kekuatan sayapnya; mereka berlari dan tidak menjadi lesu, mereka berjalan dan tidak menjadi lelah.",
     verseRef: "Yesaya 40:31",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Puncak gunung bermandikan cahaya mentari pagi",
     content: `Kehidupan modern sering kali menuntut segala sesuatu serba instan. Kita terbiasa dengan kecepatan pesan instan, makanan cepat saji, dan akses informasi dalam hitungan detik. Sayangnya, kita sering membawa mentalitas instan ini ke dalam hubungan kita dengan Tuhan. Kita ingin doa kita langsung dijawab seketika, dan ketika jawaban itu belum tampak, kita merasa kecewa dan kehilangan tenaga.
 
 Nabi Yesaya berbicara kepada bangsa yang merasa jalannya tersembunyi dari hadapan Tuhan dan haknya diabaikan. Namun Allah mengingatkan mereka bahwa Ia adalah Allah yang kekal, Pencipta seluruh bumi, yang tidak pernah menjadi lelah atau lesu. Hikmat-Nya tak terduga.
@@ -51,6 +55,8 @@ Bila hari ini kamu merasa lelah rohani, letih emosi, atau lesu secara fisik, jan
     passage: "Lukas 15:11-24",
     keyVerse: "Maka bangkitlah ia dan pergi kepada bapanya. Ketika ia masih jauh, ayahnya telah melihatnya, lalu tergeraklah hatinya oleh belas kasihan. Ayahnya itu berlari mendapatkan dia, merangkul dan mencium dia.",
     verseRef: "Lukas 15:20",
+    image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Jalan pulang penuh kehangatan cahaya kasih Bapa",
     content: `Kisah anak yang hilang adalah cermin paling jernih yang memperlihatkan isi hati Allah Bapa kepada manusia berdosa. Si bungsu meminta warisan sebelum waktunya—sebuah tindakan yang di zaman kuno setara dengan menganggap ayahnya sudah mati. Ia pergi ke negeri yang jauh, menghamburkan hartanya, dan akhirnya terpuruk menjadi penjaga babi yang kelaparan.
 
 Dalam kehinaannya, timbullah kesadaran: "Berapa banyak orang upahan bapaku yang berlimpah-limpah makanannya, tetapi aku di sini binasa kelaparan!" Ia menyusun rencana permohonan maaf, bersedia diturunkan statusnya menjadi sekadar orang upahan.
@@ -73,6 +79,8 @@ Mungkin hari ini kamu merasa dirimu tidak layak karena kegagalan moral, dosa mas
     passage: "Yohanes 15:1-8",
     keyVerse: "Tinggallah di dalam Aku dan Aku di dalam kamu. Sama seperti ranting tidak dapat berbuah dari dirinya sendiri, kalau ia tidak tinggal pada pokok anggur, demikian juga kamu tidak berbuah, jikalau kamu tidak tinggal di dalam Aku.",
     verseRef: "Yohanes 15:4",
+    image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Ranting anggur hijau subur yang berbuah lebat",
     content: `Sebuah ranting tidak pernah bersusah payah atau berkeringat untuk menghasilkan buah anggur. Ranting itu tidak mengejan atau berusaha keras memproduksi getah sendiri. Rahasia sebuah ranting sederhana: ia hanya perlu tetap menempel erat dan menyatu dengan pokok anggur. Selama saluran getah dari pokok mengalir lancar ke dalam ranting, buah yang manis dan lebat akan muncul secara alami pada musimnya.
 
 Yesus menggunakan perumpamaan ini untuk mengajar kita tentang hakikat hidup kekristenan. Kerap kali kita mengira bahwa hidup beriman adalah tentang daftar panjang aturan yang harus kita taati dengan kekuatan tekad moral kita sendiri. Kita berusaha keras menjadi sabar, berusaha keras tidak marah, berusaha keras berbuat baik—namun cepat atau lambat kita layu dan frustrasi.
@@ -95,6 +103,8 @@ Ketika hidupmu melekat erat pada Yesus, sifat-sifat Kristus—kasih, sukacita, d
     passage: "Filipi 2:1-11",
     keyVerse: "Hendaklah kamu dalam hidupmu bersama, menaruh pikiran dan perasaan yang terdapat juga dalam Kristus Yesus, yang walaupun dalam rupa Allah, tidak menganggap kesetaraan dengan Allah itu sebagai milik yang harus dipertahankan, melainkan telah mengosongkan diri-Nya sendiri...",
     verseRef: "Filipi 2:5-7",
+    image: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Keheningan doa dan kerendahan hati di hadirat Tuhan",
     content: `Dalam budaya dunia saat ini, kesuksesan diukur dari seberapa tinggi jabatan kita, seberapa populer nama kita, dan seberapa banyak hak yang dapat kita klaim. Kita diajar untuk mempromosikan diri, mendominasi percakapan, dan tidak mau mengalah.
 
 Namun jalan Kerajaan Allah adalah paradoks: jalan menuju kemuliaan dimulai dari kerendahan hati. Yesus Kristus, Sang Pencipta alam semesta yang bertakhta dalam kemuliaan tak terhingga, memilih jalan turun. Ia menanggalkan jubah kemuliaan-Nya, mengambil rupa seorang hamba, dan taat sampai mati di kayu salib.
@@ -117,6 +127,8 @@ Hari ini, di tempat kerja, di kampus, atau di rumah, mintalah hati seorang hamba
     passage: "Matius 6:25-34",
     keyVerse: "Pandanglah burung-burung di langit, yang tidak menabur dan tidak menuai dan tidak mengumpulkan bekal dalam lumbung, namun diberi makan oleh Bapamu yang di sorga. Bukankah kamu jauh melebihi burung-burung itu?",
     verseRef: "Matius 6:26",
+    image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Bunga-bunga padang bermekaran dalam pemeliharaan Bapa",
     content: `Kekhawatiran adalah salah satu pencuri sukacita terbesar dalam hidup manusia. Kata 'khawatir' dalam bahasa Yunani (merimnao) berasal dari gabungan kata yang berarti "membagi pikiran menjadi berkeping-keping". Ketika kita kuatir, fokus batin kita terpecah antara masalah masa depan yang belum tentu terjadi dan ketidakpercayaan kita pada pemeliharaan Allah.
 
 Dalam Khotbah di Bukit, Yesus mengajak para pendengar-Nya memperhatikan alam ciptaan. Burung-burung pipit tidak memiliki rekening bank atau lumbung padi, namun Bapa surgawi tidak pernah membiarkan mereka kelaparan. Bunga bakung di padang tidak bertenun, namun Salomo dalam segala kemegahannya pun tidak berpakaian seindah salah satu dari bunga itu.
@@ -139,6 +151,8 @@ Tuhan tidak menjanjikan bahwa hidup akan bebas dari tantangan, tetapi Ia menjanj
     passage: "1 Korintus 13:1-13",
     keyVerse: "Kasih itu sabar; kasih itu murah hati; ia tidak cemburu. Ia tidak memegahkan diri dan tidak sombong. Ia tidak melakukan yang tidak sopan dan tidak mencari keuntungan diri sendiri. Ia tidak pemarah dan tidak menyimpan kesalahan orang lain.",
     verseRef: "1 Korintus 13:4-5",
+    image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Kasih yang tulus, sabar, dan tak berkesudahan",
     content: `Banyak orang mengira bahwa kasih adalah sebuah emosi yang bergantung pada suasana hati. Kita merasa mudah mengasihi saat orang lain bersikap manis, menyenangkan, dan sejalan dengan kehendak kita. Namun Alkitab mendefinisikan kasih bukan sekadar perasaan hangat, melainkan sebuah komitmen tindakan yang nyata dan sering kali menuntut pengorbanan.
 
 Perhatikan kata-kata rasul Paulus: kasih itu tidak menyimpan kesalahan orang lain. Kata Yunani yang dipakai adalah istilah akuntansi (logizomai)—mencatat di buku kas. Mengasihi berarti tidak menyimpan buku catatan dosa orang lain di dalam ingatan kita, siap untuk dibuka kembali setiap kali timbul perdebatan.
@@ -161,6 +175,8 @@ Kasih Kristus di dalam kita memampukan kita untuk bersabar saat diuji, berbicara
     passage: "Efesus 6:10-18",
     keyVerse: "Akhirnya, hendaklah kamu kuat di dalam Tuhan, di dalam kekuatan kuasa-Nya. Kenakanlah seluruh perlengkapan senjata Allah, supaya kamu dapat bertahan melawan tipu muslihat Iblis.",
     verseRef: "Efesus 6:10-11",
+    image: "https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Gunung batu yang teguh tak tergoyahkan oleh badai",
     content: `Setiap hari kita berada di medan pertempuran rohani yang tak kasat mata. Lawan kita bukanlah manusia berdaging dan berdarah, melainkan tipu muslihat kegelapan yang berusaha merusak iman, mencuri damai, dan menjatuhkan integritas kita.
 
 Tipu muslihat si jahat sering kali tidak datang dengan serangan terbuka yang menakutkan, melainkan dengan bisikan halus penuh kompromi: "Sekali ini saja tidak apa-apa," "Tidak ada orang yang melihat," atau "Tuhan pasti maklum." Bila kita mengandalkan kekuatan tekad moral diri sendiri, kita pasti akan jatuh tergelincir.
@@ -183,6 +199,8 @@ Perhatikan bahwa senjata untuk menyerang balik adalah pedang Roh, yaitu firman A
     passage: "Kisah Para Rasul 16:22-34",
     keyVerse: "Tetapi kira-kira tengah malam Paulus dan Silas berdoa dan menyanyikan puji-pujian kepada Allah dan orang-orang hukuman lain mendengarkan mereka. Akan tetapi sekonyong-konyong terjadilah gempa bumi yang hebat...",
     verseRef: "Kisah Para Rasul 16:25-26",
+    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Fajar merekah di tengah keheningan malam",
     content: `Bayangkan berada dalam posisi Paulus dan Silas di kota Filipi. Mereka telah difitnah, dilucuti pakaiannya, didera dengan cambuk hingga punggung mereka berlumuran darah, dan akhirnya dilemparkan ke penjara terdalam dengan kaki terbelenggu pasungan kayu yang menyakitkan.
 
 Secara manusiawi, mereka memiliki seribu alasan untuk mengeluh, memprotes Tuhan, atau menangis meratapi ketidakadilan. Namun apa yang terjadi pada tengah malam itu? Dari sel yang gelap dan pengap terdengar suara doa dan puji-pujian kepada Allah! Paulus dan Silas tidak membiarkan belenggu fisik merampas pujian dari bibir mereka.
@@ -205,6 +223,8 @@ Pujian dan ucapan syukur adalah kunci yang membuka pintu-pintu terkurung dalam h
     passage: "Matius 5:13-16",
     keyVerse: "Demikianlah hendaknya terangmu bercahaya di depan orang, supaya mereka melihat perbuatanmu yang baik dan memuliakan Bapamu yang di sorga.",
     verseRef: "Matius 5:16",
+    image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Pelita lilin yang menyala menerangi jalan dalam kegelapan",
     content: `Yesus tidak pernah memanggil murid-murid-Nya untuk mengasingkan diri ke tempat terpencil agar tetap suci. Sebaliknya, Ia menempatkan kita tepat di tengah-tengah dunia yang rusak ini sebagai garam dan terang.
 
 Garam memiliki dua fungsi esensial pada zaman dulu: mengawetkan makanan dari pembusukan dan memberikan rasa gurih. Tanpa garam, daging akan membusuk dan sayur akan terasa hambar. Demikian juga orang percaya dipanggil untuk mencegah pembusukan moral di masyarakat dan menghadirkan cita rasa kasih Kristus yang menyegarkan di lingkungan manapun kita berada.
@@ -230,6 +250,8 @@ const THEMES_LIBRARY = [
     verseRef: "Roma 5:5",
     keyVerse: "Dan pengharapan tidak mengecewakan, karena kasih Allah telah dicurahkan di dalam hati kita oleh Roh Kudus yang telah dikaruniakan kepada kita.",
     titleTemplate: "Berakar Kuat dalam Pengharapan Ilahi",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Cahaya mentari terbit pembawa pengharapan baru",
     contentSeed: "Pengharapan Kristen bukanlah sekadar angan-angan kosong, melainkan jangkar jiwa yang pasti dan teguh karena ditambatkan pada janji Allah yang setia..."
   },
   {
@@ -238,6 +260,8 @@ const THEMES_LIBRARY = [
     verseRef: "Amsal 4:7",
     keyVerse: "Permulaan hikmat ialah: perolehlah hikmat dan dengan segala yang kauperoleh perolehlah pengertian.",
     titleTemplate: "Mencari Hikmat Lebih dari Permata",
+    image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Kitab firman Tuhan yang membimbing setiap langkah",
     contentSeed: "Di era banjir informasi, kita sering kaya pengetahuan namun miskin hikmat. Hikmat ilahi menolong kita membedakan mana yang penting dari yang sekadar mendesak..."
   },
   {
@@ -246,6 +270,8 @@ const THEMES_LIBRARY = [
     verseRef: "Ulangan 28:2",
     keyVerse: "Segala berkat ini akan datang kepadamu dan menjadi bagianmu, jikalau engkau mendengarkan suara TUHAN, Allahmu.",
     titleTemplate: "Langkah Ketaatan Mendatangkan Perkenanan",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Lembah hijau permai dialiri air kehidupan yang sejuk",
     contentSeed: "Ketaatan kepada firman Tuhan bukanlah beban berat yang membelenggu, melainkan jalur aman di mana berkat dan perlindungan-Nya melimpah atas kita..."
   },
   {
@@ -254,6 +280,8 @@ const THEMES_LIBRARY = [
     verseRef: "Mazmur 147:3",
     keyVerse: "Ia menyembuhkan orang-orang yang patah hati dan membalut luka-luka mereka.",
     titleTemplate: "Tabib Agung yang Menjamah Jiwa",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Danau yang tenang mencerminkan damai pemulihan Kristus",
     contentSeed: "Tuhan tidak pernah jijik atau berpaling dari luka batinmu. Seperti seorang dokter bedah yang terampil dan penuh belas kasih, Ia ingin membebat dan memulihkan setiap goresan duka..."
   },
   {
@@ -262,6 +290,8 @@ const THEMES_LIBRARY = [
     verseRef: "Yohanes 8:36",
     keyVerse: "Jadi apabila Anak itu memerdekakan kamu, kamu pun benar-benar merdeka.",
     titleTemplate: "Lepas dari Belenggu Rasa Bersalah",
+    image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Langit luas tanpa batas simbol kemerdekaan iman",
     contentSeed: "Kemerdekaan di dalam Kristus bukanlah izin untuk berbuat dosa, melainkan kuasa untuk hidup benar dan terbebas dari jerat kecanduan dan rasa tertuduh..."
   },
   {
@@ -270,6 +300,8 @@ const THEMES_LIBRARY = [
     verseRef: "Matius 6:6",
     keyVerse: "Tetapi jika engkau berdoa, masuklah ke dalam kamarmu, tutuplah pintu dan berdoalah kepada Bapamu yang ada di tempat tersembunyi.",
     titleTemplate: "Keintiman di Ruang Rahasia Hadirat-Nya",
+    image: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Ruang hening dalam sujud doa di hadapan Allah",
     contentSeed: "Doa bukanlah pertunjukan kata-kata indah untuk mengesankan orang lain, melainkan percakapan jujur seorang anak yang bersandar di pangkuan Bapanya..."
   },
   {
@@ -278,6 +310,8 @@ const THEMES_LIBRARY = [
     verseRef: "Galatia 6:9",
     keyVerse: "Janganlah kita jemu-jemu berbuat baik, karena apabila sudah datang waktunya, kita akan menuai, jikalau kita tidak menjadi lemah.",
     titleTemplate: "Ketekunan Menabur di Ladang Tuhan",
+    image: "https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=1200&q=80",
+    imageCaption: "Ladang gandum emas yang siap dituai dengan sorak-sorai",
     contentSeed: "Sering kali kita tergoda berhenti berbuat baik ketika kebaikan kita dibalas dengan keburukan. Namun ingatlah: kita menabur untuk Tuhan, bukan untuk tepuk tangan manusia..."
   }
 ];
@@ -311,6 +345,8 @@ function getDevotionalForDate(targetDate = new Date()) {
     dateString: dateStr,
     isoDate: isoDate,
     dayOfYear: dayOfYear,
-    dailyQuote: `Renungan Saat Teduh • Hari ke-${dayOfYear} dari 365 Hari Berjalan Bersama Tuhan`
+    dailyQuote: `Renungan Saat Teduh • Hari ke-${dayOfYear} dari 365 Hari Berjalan Bersama Tuhan`,
+    image: baseDevotional.image || themeVariation.image,
+    imageCaption: baseDevotional.imageCaption || themeVariation.imageCaption
   };
 }
