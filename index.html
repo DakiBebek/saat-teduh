@@ -56,7 +56,7 @@
   <!-- ======================================================== -->
   <!-- APP SPLASH SCREEN (TAMPIL SEJENAK SAAT APLIKASI DIBUKA)   -->
   <!-- ======================================================== -->
-  <div id="app-splash-screen" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#14181a] via-[#0f1416] to-[#0a0d0e] flex flex-col items-center justify-center p-6 text-white transition-opacity duration-700 ease-out">
+  <div id="app-splash-screen" onclick="dismissSplashScreen()" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#14181a] via-[#0f1416] to-[#0a0d0e] flex flex-col items-center justify-center p-6 text-white cursor-pointer select-none transition-opacity duration-500 ease-out">
     <div class="relative flex flex-col items-center text-center max-w-xs animate-splash-fade">
       
       <!-- Ambient Glow Behind Logo -->
@@ -83,11 +83,27 @@
       </div>
       
       <span class="text-[10px] uppercase tracking-widest text-stone-500 mt-3 font-semibold">
-        Memuat Hadirat Tuhan...
+        Sentuh layar untuk masuk
       </span>
 
     </div>
   </div>
+
+  <!-- Inline Safe-Dismiss Splash Screen Script (Jaminan Pasti Hilang dalam 1.2 Detik) -->
+  <script>
+    function dismissSplashScreen() {
+      var splash = document.getElementById('app-splash-screen');
+      if (splash) {
+        splash.style.opacity = '0';
+        splash.style.pointerEvents = 'none';
+        setTimeout(function() {
+          if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+        }, 500);
+      }
+    }
+    // Otomatis hilang setelah 1.2 detik tanpa syarat apapun
+    setTimeout(dismissSplashScreen, 1200);
+  </script>
 
   <!-- Confetti Canvas untuk Selebrasi Penyelesaian Saat Teduh -->
   <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
