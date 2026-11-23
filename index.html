@@ -11,7 +11,10 @@
   <meta name="theme-color" content="#c29b38">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="Saat Teduh">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -744,7 +747,7 @@
             </div>
             <!-- Switch Toggle -->
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-notif-enabled" class="sr-only peer">
+              <input type="checkbox" id="toggle-notif-enabled" onchange="handleNotificationToggle(this)" class="sr-only peer">
               <div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer dark:bg-stone-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
             </label>
           </div>
@@ -761,6 +764,22 @@
               <span>🔔</span> <span>Uji Coba Notifikasi Sekarang</span>
             </button>
           </div>
+        </div>
+
+        <!-- Install App Banner (PWA) -->
+        <div id="pwa-install-card" class="bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-2xl shadow-md p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shrink-0">
+              📲
+            </div>
+            <div>
+              <h4 class="text-sm sm:text-base font-bold font-display-title">Pasang di Layar Utama HP</h4>
+              <p class="text-xs text-amber-100 mt-0.5">Buka lebih cepat seperti aplikasi resmi tanpa membuka browser.</p>
+            </div>
+          </div>
+          <button id="btn-pwa-install" onclick="installPWA()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-amber-900 hover:bg-amber-50 shadow-sm transition-all text-center">
+            Pasang Aplikasi Sekarang
+          </button>
         </div>
 
         <!-- Backup & Restore Data -->

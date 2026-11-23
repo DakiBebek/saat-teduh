@@ -199,7 +199,7 @@ function renderDevotionalView() {
     const fallbackImage = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80';
     devoImage.src = devotional.image || fallbackImage;
     devoImage.alt = devotional.title;
-    devoImage.onerror = function() {
+    devoImage.onerror = function () {
       this.src = fallbackImage;
       this.classList.remove('opacity-0');
     };
@@ -1083,51 +1083,64 @@ function setupAudioControls() {
 }
 
 // -------------------------------------------------------------
-// PENGINGAT NOTIFIKASI SAAT TEDUH (SETTINGS TAB)
+// PENGINGAT NOTIFIKASI SAAT TEDUH (SETTINGS TAB) & PWA INSTALL
 // -------------------------------------------------------------
-function setupNotificationSettings() {
+function syncNotificationUI() {
+  if (!window.NotificationManager) return;
   const toggle = document.getElementById('toggle-notif-enabled');
   const timePicker = document.getElementById('notif-time-picker');
-  const testBtn = document.getElementById('btn-test-notification');
-
-  if (!window.NotificationManager) return;
-
   const currentSettings = window.NotificationManager.getSettings();
-  if (toggle) toggle.checked = currentSettings.enabled;
-  if (timePicker) timePicker.value = currentSettings.time || '06:00';
 
-  if (toggle) {
-    toggle.addEventListener('change', async (e) => {
-      if (e.target.checked) {
-        const granted = await window.NotificationManager.requestPermission();
-        if (!granted) {
-          e.target.checked = false;
-          alert('Izin notifikasi tidak diberikan. Harap aktifkan izin notifikasi pada pengaturan browser / ponsel Anda.');
-          return;
-        }
+  if (toggle) toggle.checked = !!currentSettings.enabled;
+  if (timePicker && currentSettings.time) timePicker.value = currentSettings.time;
+}
+
+function setupNotificationSettings() {
+  syncNotificationUI();
+
+  const timePicker = document.getElementById('notif-time-picker');
+  if (timePicker) {
+    timePicker.addEventListener('change', (e) => {
+      if (window.NotificationManager) {
         const settings = window.NotificationManager.getSettings();
-        settings.enabled = true;
-        window.NotificationManager.saveSettings(settings);
-      } else {
-        const settings = window.NotificationManager.getSettings();
-        settings.enabled = false;
+        settings.time = e.target.value;
         window.NotificationManager.saveSettings(settings);
       }
     });
   }
+}
 
-  if (timePicker) {
-    timePicker.addEventListener('change', (e) => {
-      const settings = window.NotificationManager.getSettings();
-      settings.time = e.target.value;
-      window.NotificationManager.saveSettings(settings);
-    });
-  }
+// Penanganan PWA Install Prompt di HP
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const installCard = document.getElementById('pwa-install-card');
+  if (installCard) installCard.classList.remove('hidden');
+});
 
-  if (testBtn) {
-    testBtn.addEventListener('click', () => {
-      window.NotificationManager.sendTestNotification();
+function installPWA() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        const installCard = document.getElementById('pwa-install-card');
+        if (installCard) installCard.classList.add('hidden');
+      }
+      deferredInstallPrompt = null;
     });
+  } else {
+    // Petunjuk manual jika browser belum memicu event bawaan (misal Safari di iPhone)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      alert('Untuk memasang di iPhone/iPad: Tekan tombol Bagikan (Share) ⎋ di browser Safari, lalu pilih "Tambahkan ke Layar Utama" (+).');
+    } else {
+      alert('Untuk memasang di Android: Buka menu titik tiga (⋮) di pojok kanan atas Chrome, lalu pilih "Pasang aplikasi" atau "Tambahkan ke Layar Utama".');
+    }
   }
 }
+
+window.installPWA = installPWA;
+window.syncNotificationUI = syncNotificationUI;
+
 
