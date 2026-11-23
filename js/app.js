@@ -38,6 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSermonHandlers();
   setupSettingsHandlers();
   setupNotificationSettings();
+
+  // Menutup Splash Screen secara halus seperti aplikasi mobile native
+  setTimeout(() => {
+    const splash = document.getElementById('app-splash-screen');
+    if (splash) {
+      splash.style.opacity = '0';
+      splash.style.pointerEvents = 'none';
+      setTimeout(() => splash.remove(), 700);
+    }
+  }, 1300);
 });
 
 // -------------------------------------------------------------

@@ -13,7 +13,11 @@ const NotificationManager = {
     };
     try {
       const saved = localStorage.getItem(this.SETTINGS_KEY);
-      return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...defaultSettings, ...parsed };
+      }
+      return defaultSettings;
     } catch (e) {
       return defaultSettings;
     }
@@ -68,7 +72,7 @@ const NotificationManager = {
   },
 
   async requestPermission() {
-    if (!this.isSupported()) return false;
+    if (!this.isSupported()) return true; // tetap return true agar setting tersimpan dan in-app toast bekerja
     try {
       let permission = Notification.permission;
       if (permission === 'default') {
@@ -76,8 +80,8 @@ const NotificationManager = {
       }
       return permission === 'granted';
     } catch (e) {
-      console.error('Error requestPermission:', e);
-      return false;
+      console.warn('requestPermission fallback:', e);
+      return true;
     }
   },
 
@@ -117,7 +121,7 @@ const NotificationManager = {
       }
     }
 
-    // Selalu tampilkan In-App Toast juga agar pengguna langsung melihat hasil uji coba di layar HP!
+    // Selalu tampilkan In-App Toast agar dijamin 100% muncul di layar HP
     this.showInAppToast(title, defaultOptions.body);
 
     return sent;
@@ -129,7 +133,7 @@ const NotificationManager = {
       ? `"${verse.text.slice(0, 90)}..." — ${verse.passage}`
       : 'Waktunya saat teduh dan mendekat kepada Tuhan hari ini.';
 
-    // Minta izin jika belum
+    // Minta izin notifikasi jika didukung
     if (this.isSupported() && Notification.permission !== 'granted') {
       try {
         await this.requestPermission();
@@ -177,7 +181,33 @@ const NotificationManager = {
   }
 };
 
-// Global helper function dipanggil langsung oleh tombol
+// Handler Switch Toggle Notifikasi Langsung
+async function handleNotificationToggle(checkbox) {
+  if (!checkbox) return;
+  const isChecked = checkbox.checked;
+  const settings = NotificationManager.getSettings();
+
+  if (isChecked) {
+    settings.enabled = true;
+    NotificationManager.saveSettings(settings);
+    
+    // Minta izin notifikasi sistem jika didukung
+    if (NotificationManager.isSupported()) {
+      await NotificationManager.requestPermission();
+    }
+    NotificationManager.showInAppToast('Pengingat Aktif 🔔', `Pengingat harian diset ke pukul ${settings.time || '06:00'}.`);
+  } else {
+    settings.enabled = false;
+    NotificationManager.saveSettings(settings);
+    NotificationManager.showInAppToast('Pengingat Dinonaktifkan', 'Notifikasi pengingat harian telah dimatikan.');
+  }
+
+  if (window.syncNotificationUI) {
+    window.syncNotificationUI();
+  }
+}
+
+// Global helper function dipanggil langsung oleh tombol uji coba
 function triggerTestNotification(btn) {
   if (btn) {
     const originalText = btn.innerHTML;
@@ -189,15 +219,15 @@ function triggerTestNotification(btn) {
     }, 1500);
   }
 
-  if (window.NotificationManager) {
-    window.NotificationManager.sendTestNotification();
-  }
+  NotificationManager.sendTestNotification();
 }
 
 if (typeof window !== 'undefined') {
   window.NotificationManager = NotificationManager;
   window.triggerTestNotification = triggerTestNotification;
+  window.handleNotificationToggle = handleNotificationToggle;
   document.addEventListener('DOMContentLoaded', () => {
     NotificationManager.init();
+    if (window.syncNotificationUI) window.syncNotificationUI();
   });
 }

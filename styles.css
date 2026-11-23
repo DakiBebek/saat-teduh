@@ -34,19 +34,35 @@ html, body {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* Modal Pop-up Smooth Scale Animation */
-#verse-popup-modal:not(.hidden) > div {
-  animation: popupScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Splash Screen Animations */
+.animate-splash-fade {
+  animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes popupScaleIn {
+@keyframes splashFadeIn {
   0% {
     opacity: 0;
-    transform: scale(0.92) translateY(12px);
+    transform: scale(0.92) translateY(8px);
   }
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+.animate-splash-progress {
+  animation: splashProgress 1.4s ease-in-out forwards;
+}
+
+@keyframes splashProgress {
+  0% {
+    width: 0%;
+  }
+  60% {
+    width: 75%;
+  }
+  100% {
+    width: 100%;
   }
 }
 
