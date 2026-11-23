@@ -1,5 +1,5 @@
 /**
- * Sistem Pengingat Saat Teduh (Web Notification API + Fallback Banner Toast)
+ * Sistem Pengingat Saat Teduh (Web Notification API + Fallback Banner Toast + Audio Chime)
  * Data pengaturan disimpan per-akun (User ID / Email)
  */
 
@@ -46,20 +46,51 @@ const NotificationManager = {
     return typeof window !== 'undefined' && 'Notification' in window;
   },
 
-  // Banner toast in-app yang selalu pasti muncul di layar HP
+  // Suara lonceng doa lembut (Web Audio API Synthesizer)
+  playChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 1.2);
+    } catch (e) {
+      console.warn('Audio chime fallback:', e);
+    }
+  },
+
+  // Banner notifikasi in-app yang selalu pasti muncul di layar HP
   showInAppToast(title, body) {
+    this.playChime();
+
     const existing = document.getElementById('st-inapp-toast');
     if (existing) existing.remove();
 
     const toast = document.createElement('div');
     toast.id = 'st-inapp-toast';
-    toast.className = 'fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl border border-amber-500/40 flex items-start gap-3 transform transition-all duration-300';
+    toast.className = 'fixed top-3 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-[9999] bg-stone-900 text-white rounded-2xl p-4 shadow-2xl border-2 border-amber-500 flex items-start gap-3 transform transition-all duration-300';
     toast.innerHTML = `
-      <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-xl">
-        🔔
+      <div class="w-10 h-10 rounded-xl bg-amber-500/30 text-amber-300 flex items-center justify-center shrink-0 text-xl shadow-inner">
+        🕊️
       </div>
       <div class="flex-1">
-        <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif-bible">${title}</h4>
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif-bible">${title}</h4>
+        </div>
         <p class="text-[11px] sm:text-xs text-stone-200 mt-1 leading-snug">${body}</p>
       </div>
       <button onclick="this.parentElement.remove()" class="text-stone-400 hover:text-white p-1 text-xs">✕</button>
@@ -67,18 +98,18 @@ const NotificationManager = {
 
     document.body.appendChild(toast);
 
-    // Getar HP jika didukung
+    // Getar HP
     if ('vibrate' in navigator) {
       try { navigator.vibrate([200, 100, 200]); } catch (e) {}
     }
 
-    // Auto dismiss setelah 7 detik
+    // Auto dismiss setelah 8 detik
     setTimeout(() => {
       if (toast && toast.parentElement) {
         toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
+        setTimeout(() => toast.remove(), 400);
       }
-    }, 7000);
+    }, 8000);
   },
 
   async requestPermission() {
@@ -90,7 +121,7 @@ const NotificationManager = {
       }
       return permission === 'granted';
     } catch (e) {
-      console.warn('requestPermission fallback:', e);
+      console.warn('requestPermission error:', e);
       return false;
     }
   },
@@ -106,42 +137,36 @@ const NotificationManager = {
       ...options
     };
 
-    let sent = false;
+    // 1. Tampilkan banner in-app visual + suara lonceng di HP
+    this.showInAppToast(title, defaultOptions.body);
 
-    // Coba Service Worker notification
+    // 2. Coba kirimkan ke bar status HP sistem (Service Worker)
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.ready;
         if (registration && registration.showNotification) {
           await registration.showNotification(title, defaultOptions);
-          sent = true;
         }
       } catch (e) {
         console.warn('SW notification fallback:', e);
       }
     }
 
-    // Coba new Notification jika SW belum ready
-    if (!sent && this.isSupported() && Notification.permission === 'granted') {
+    // 3. Coba new Notification jika didukung
+    if (this.isSupported() && Notification.permission === 'granted') {
       try {
         new Notification(title, defaultOptions);
-        sent = true;
       } catch (err) {
         console.warn('new Notification fallback:', err);
       }
     }
-
-    // Selalu tampilkan In-App Toast agar dijamin 100% muncul di layar HP
-    this.showInAppToast(title, defaultOptions.body);
-
-    return sent;
   },
 
   async sendTestNotification() {
     const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(new Date()) : null;
     const body = verse 
       ? `"${verse.text.slice(0, 90)}..." — ${verse.passage}`
-      : 'Waktunya saat teduh dan mendekat kepada Tuhan hari ini.';
+      : 'Waktunya mengambil waktu hening sejenak bersama Tuhan hari ini.';
 
     // Minta izin notifikasi jika didukung
     if (this.isSupported() && Notification.permission !== 'granted') {
@@ -150,7 +175,7 @@ const NotificationManager = {
       } catch (e) {}
     }
 
-    await this.showNotification('Saat Teduh Kristen 🕊️', { body });
+    await this.showNotification('Saat Teduh Hari Ini 🕊️', { body });
   },
 
   checkAndNotify() {
