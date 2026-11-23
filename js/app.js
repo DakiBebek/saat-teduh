@@ -38,14 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSermonHandlers();
   setupSettingsHandlers();
   setupNotificationSettings();
-
-  // Periksa apakah pop-up ayat emas hari ini perlu ditampilkan
-  if (typeof checkDailyVersePopup === 'function') {
-    const isGuest = sessionStorage.getItem('st_guest_mode') === 'true';
-    if (isGuest || (typeof currentUser !== 'undefined' && currentUser)) {
-      checkDailyVersePopup();
-    }
-  }
 });
 
 // -------------------------------------------------------------
@@ -511,74 +503,6 @@ function generateVerseCardImage(verse) {
   link.download = `Ayat-Hari-Ini-${verse.passage.replace(/\s+/g, '-')}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
-}
-
-// -------------------------------------------------------------
-// MODAL POP-UP AYAT HARIAN (VERSE OF THE DAY POP-UP)
-// -------------------------------------------------------------
-function checkDailyVersePopup() {
-  const todayIso = getIsoDate(new Date());
-  const lastPopupDate = localStorage.getItem('st_last_verse_popup');
-  
-  // Tampilkan otomatis jika hari ini belum pernah melihat pop-up
-  if (lastPopupDate !== todayIso) {
-    setTimeout(() => {
-      openDailyVersePopup();
-    }, 700);
-  }
-}
-
-function openDailyVersePopup() {
-  const verse = getVerseOfTheDay(new Date());
-  const modal = document.getElementById('verse-popup-modal');
-  if (!modal) return;
-
-  const themeEl = document.getElementById('popup-verse-theme');
-  const dateEl = document.getElementById('popup-verse-date');
-  const textEl = document.getElementById('popup-verse-text');
-  const passageEl = document.getElementById('popup-verse-passage');
-  const promptEl = document.getElementById('popup-verse-prompt');
-
-  if (themeEl) themeEl.textContent = verse.theme;
-  if (dateEl) dateEl.textContent = verse.dateString;
-  if (textEl) textEl.textContent = `"${verse.text}"`;
-  if (passageEl) passageEl.textContent = `— ${verse.passage} (TB)`;
-  if (promptEl) promptEl.textContent = verse.reflectionPrompt;
-
-  modal.style.display = 'flex';
-  modal.classList.remove('hidden');
-}
-
-function closeDailyVersePopup(markAsSeenToday = true) {
-  const modal = document.getElementById('verse-popup-modal');
-  if (modal) {
-    modal.style.display = 'none';
-    modal.classList.add('hidden');
-  }
-  if (markAsSeenToday) {
-    const todayIso = getIsoDate(new Date());
-    localStorage.setItem('st_last_verse_popup', todayIso);
-  }
-}
-
-function copyPopupVerse() {
-  const verse = getVerseOfTheDay(new Date());
-  const fullText = `✝️ *Ayat Emas Hari Ini* 📖\n_${verse.dateString}_\n\n"${verse.text}"\n— *${verse.passage}* (TB)\n\n💭 _Renungan Singkat:_\n${verse.reflectionPrompt}\n\nKiranya menguatkan dan meneguhkan hatimu hari ini! 🙏`;
-  navigator.clipboard.writeText(fullText).then(() => {
-    const copyText = document.getElementById('popup-copy-text');
-    if (copyText) {
-      copyText.textContent = 'Tersalin! ✓';
-      setTimeout(() => {
-        copyText.textContent = 'Salin Ayat';
-      }, 2000);
-    }
-  });
-}
-
-function sharePopupVerseWhatsApp() {
-  const verse = getVerseOfTheDay(new Date());
-  const text = `✝️ *Ayat Emas Hari Ini* 📖\n_${verse.dateString}_\n\n"${verse.text}"\n— *${verse.passage}* (TB)\n\n💭 _Renungan Singkat:_\n${verse.reflectionPrompt}\n\nSemoga damai sejahtera Kristus melimpah atasmu hari ini! ✨🙏`;
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 // -------------------------------------------------------------
@@ -1196,11 +1120,4 @@ function setupNotificationSettings() {
     });
   }
 }
-
-// Expose fungsi pop up ke window scope agar aman dipanggil dari mana saja
-window.openDailyVersePopup = openDailyVersePopup;
-window.closeDailyVersePopup = closeDailyVersePopup;
-window.copyPopupVerse = copyPopupVerse;
-window.sharePopupVerseWhatsApp = sharePopupVerseWhatsApp;
-window.checkDailyVersePopup = checkDailyVersePopup;
 
