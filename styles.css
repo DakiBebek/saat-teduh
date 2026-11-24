@@ -34,36 +34,20 @@ html, body {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* Splash Screen Animations */
-.animate-splash-fade {
-  animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Minimalist Splash Screen */
+#app-splash-screen {
+  background-color: #0c0f11;
 }
 
-@keyframes splashFadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.92) translateY(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.splash-logo-mark {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-splash-progress {
-  animation: splashProgress 1.4s ease-in-out forwards;
-}
-
-@keyframes splashProgress {
-  0% {
-    width: 0%;
-  }
-  60% {
-    width: 75%;
-  }
-  100% {
-    width: 100%;
-  }
+.splash-fade-out {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 /* Equalizer Bars Animation untuk Ambient Audio */

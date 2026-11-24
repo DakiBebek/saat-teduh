@@ -54,55 +54,41 @@
 <body class="min-h-screen bg-[#faf8f5] text-stone-800 transition-colors duration-200 antialiased selection:bg-amber-200">
 
   <!-- ======================================================== -->
-  <!-- APP SPLASH SCREEN (TAMPIL SEJENAK SAAT APLIKASI DIBUKA)   -->
+  <!-- APP SPLASH SCREEN (MINIMAL & PROFESIONAL)                -->
   <!-- ======================================================== -->
-  <div id="app-splash-screen" onclick="dismissSplashScreen()" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#14181a] via-[#0f1416] to-[#0a0d0e] flex flex-col items-center justify-center p-6 text-white cursor-pointer select-none transition-opacity duration-500 ease-out">
-    <div class="relative flex flex-col items-center text-center max-w-xs animate-splash-fade">
+  <div id="app-splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 text-white select-none transition-opacity duration-300">
+    <div class="flex flex-col items-center text-center">
       
-      <!-- Ambient Glow Behind Logo -->
-      <div class="absolute -top-10 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-      <!-- Brand Logo / Cross Icon with Gentle Pulse -->
-      <div class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white shadow-2xl shadow-amber-600/40 mb-6 border border-amber-400/30 transform hover:scale-105 transition-transform">
-        <svg class="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md text-amber-50" fill="currentColor" viewBox="0 0 24 24">
+      <!-- Minimalist Clean Cross Mark -->
+      <div class="w-14 h-14 rounded-2xl bg-stone-900 border border-stone-800 flex items-center justify-center text-amber-500 mb-4 shadow-sm splash-logo-mark">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
           <path d="M11 2v7H4v2h7v11h2V11h7V9h-7V2h-2z"/>
         </svg>
       </div>
 
       <!-- App Title -->
-      <h1 class="text-3xl sm:text-4xl font-bold font-display-title tracking-wider text-amber-100">
+      <h1 class="text-xl font-bold tracking-tight text-stone-100 font-display-title">
         Saat Teduh
       </h1>
-      <p class="text-xs sm:text-sm text-stone-400 mt-2 font-serif-bible italic tracking-wide">
-        "Berjalan Bersama Kristus Setiap Hari"
+      <p class="text-[11px] text-stone-500 mt-1 font-medium tracking-wide">
+        Renungan & Doa Harian
       </p>
-
-      <!-- Elegant Minimal Progress Bar -->
-      <div class="w-36 h-1 bg-stone-800 rounded-full overflow-hidden mt-8">
-        <div class="h-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-500 rounded-full animate-splash-progress"></div>
-      </div>
-      
-      <span class="text-[10px] uppercase tracking-widest text-stone-500 mt-3 font-semibold">
-        Sentuh layar untuk masuk
-      </span>
 
     </div>
   </div>
 
-  <!-- Inline Safe-Dismiss Splash Screen Script (Jaminan Pasti Hilang dalam 1.2 Detik) -->
   <script>
-    function dismissSplashScreen() {
-      var splash = document.getElementById('app-splash-screen');
-      if (splash) {
-        splash.style.opacity = '0';
-        splash.style.pointerEvents = 'none';
-        setTimeout(function() {
-          if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
-        }, 500);
+    // Tutup splash screen dalam 700ms (cepat, bersih, tidak menahan user)
+    (function() {
+      function hideSplash() {
+        var s = document.getElementById('app-splash-screen');
+        if (s) {
+          s.classList.add('splash-fade-out');
+          setTimeout(function() { if (s && s.parentNode) s.parentNode.removeChild(s); }, 400);
+        }
       }
-    }
-    // Otomatis hilang setelah 1.2 detik tanpa syarat apapun
-    setTimeout(dismissSplashScreen, 1200);
+      setTimeout(hideSplash, 650);
+    })();
   </script>
 
   <!-- Confetti Canvas untuk Selebrasi Penyelesaian Saat Teduh -->
@@ -303,12 +289,12 @@
         </div>
 
         <!-- Devotional Reading Card -->
-        <article class="bg-white dark:bg-stone-800 rounded-2xl sm:rounded-3xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden transition-all">
+        <article class="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200/90 dark:border-stone-700/80 shadow-sm overflow-hidden transition-all">
           
           <!-- Foto Ilustrasi Sesuai Tema Renungan -->
           <div class="relative w-full h-44 sm:h-64 overflow-hidden bg-stone-900 group">
             <img id="devo-image" src="" alt="Ilustrasi Renungan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-0 transition-opacity duration-500" loading="eager" onload="this.classList.remove('opacity-0')">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
             
             <!-- Floating Theme Badge & Image Caption -->
             <div class="absolute bottom-3 left-3.5 right-3.5 sm:bottom-4 sm:left-6 sm:right-6 flex items-end justify-between gap-2">
@@ -326,7 +312,7 @@
             <div class="flex items-center justify-between text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400 mb-2">
               <span id="devo-date-display">Tanggal</span>
               <span class="text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1">
-                <span>🕊️</span> Saat Teduh Harian
+                Saat Teduh Harian
               </span>
             </div>
 
@@ -335,7 +321,7 @@
             </h2>
 
             <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-400">
-              <span>Nats Firman:</span>
+              <span>Bacaan:</span>
               <span id="devo-passage" class="underline decoration-amber-500/40"></span>
               <a id="devo-bible-link" href="#" target="_blank" class="inline-flex items-center text-[11px] px-2.5 py-0.5 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 hover:bg-amber-200 transition-colors">
                 Buka Alkitab ↗
@@ -364,16 +350,16 @@
             <!-- Panduan Doa & Komitmen Aksi -->
             <div class="mt-6 sm:mt-8 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               
-              <div class="bg-stone-50 dark:bg-stone-900/60 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-stone-200/60 dark:border-stone-700">
+              <div class="bg-stone-50 dark:bg-stone-900/60 p-4 sm:p-5 rounded-xl border border-stone-200/60 dark:border-stone-700">
                 <div class="flex items-center gap-1.5 mb-1.5 text-stone-900 dark:text-stone-100 font-bold text-xs sm:text-sm">
-                  <span>🙏</span> Doa Hari Ini:
+                  Doa Hari Ini
                 </div>
                 <p id="devo-prayer" class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 italic leading-relaxed"></p>
               </div>
 
-              <div class="bg-amber-50/60 dark:bg-amber-950/20 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-amber-200/60 dark:border-amber-900/40">
+              <div class="bg-amber-50/60 dark:bg-amber-950/20 p-4 sm:p-5 rounded-xl border border-amber-200/60 dark:border-amber-900/40">
                 <div class="flex items-center gap-1.5 mb-1.5 text-amber-900 dark:text-amber-200 font-bold text-xs sm:text-sm">
-                  <span>🎯</span> Langkah Praktis Hari Ini:
+                  Penerapan Praktis
                 </div>
                 <p id="devo-action" class="text-xs sm:text-sm text-amber-950 dark:text-amber-100 leading-relaxed"></p>
               </div>
@@ -381,11 +367,11 @@
             </div>
 
             <!-- Pertanyaan Refleksi Prompts -->
-            <div class="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-blue-50/40 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-900/40">
-              <h4 class="text-xs sm:text-sm font-bold text-blue-950 dark:text-blue-200 mb-1.5 flex items-center gap-1.5">
-                <span>💡</span> Pertanyaan Perenungan:
+            <div class="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-900/40 border border-stone-200/70 dark:border-stone-700">
+              <h4 class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-200 mb-1.5 flex items-center gap-1.5">
+                Pertanyaan Perenungan:
               </h4>
-              <ul id="devo-reflection-prompts" class="text-xs sm:text-sm text-blue-900 dark:text-blue-200/90 space-y-1"></ul>
+              <ul id="devo-reflection-prompts" class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 space-y-1"></ul>
             </div>
 
           </div>
@@ -469,21 +455,16 @@
       <!-- ======================================================== -->
       <div id="tab-verse" class="tab-content hidden space-y-4 sm:space-y-6">
         
-        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-stone-900 via-stone-800 to-stone-950 text-white p-5 sm:p-10 shadow-xl border border-stone-700">
-          
-          <!-- Background Ornament -->
-          <div class="absolute -right-16 -top-16 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
-          <div class="absolute -left-16 -bottom-16 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+        <div class="relative overflow-hidden rounded-2xl bg-stone-900 text-white p-6 sm:p-10 shadow-lg border border-stone-800">
 
-          <div class="relative z-10 text-center max-w-2xl mx-auto space-y-4 sm:space-y-6">
+          <div class="relative z-10 text-center max-w-2xl mx-auto space-y-4">
             
-            <!-- Simbol Salib Halus -->
-            <div class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 mb-1">
-              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2v7H4v2h7v11h2V11h7V9h-7V2h-2z"/></svg>
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-stone-800 text-amber-400 mb-1">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2v7H4v2h7v11h2V11h7V9h-7V2h-2z"/></svg>
             </div>
 
             <div>
-              <span id="vod-theme" class="px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span id="vod-theme" class="px-3 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-stone-800 text-amber-400 border border-stone-700">
                 Tema
               </span>
               <p id="vod-date" class="text-xs text-stone-400 mt-1 font-medium">
@@ -500,14 +481,14 @@
             </p>
 
             <!-- Prompt Refleksi Ayat -->
-            <div class="pt-3 border-t border-stone-700/80 max-w-xl mx-auto">
-              <p class="text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">Renungan Ayat:</p>
+            <div class="pt-3 border-t border-stone-800 max-w-xl mx-auto">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">Refleksi:</p>
               <p id="vod-prompt" class="text-xs sm:text-sm text-stone-300 italic"></p>
             </div>
 
             <!-- Tombol Aksi (Stack di Mobile) -->
             <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3">
-              <button id="btn-copy-verse" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 transition-colors flex items-center justify-center gap-1.5">
+              <button id="btn-copy-verse" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 transition-colors flex items-center justify-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                 <span>Salin Ayat</span>
               </button>
