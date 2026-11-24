@@ -1102,11 +1102,46 @@ function setupNotificationSettings() {
 
 // Penanganan PWA Install Prompt di HP
 let deferredInstallPrompt = null;
+
+// Cek apakah aplikasi sudah berjalan dalam mode standalone (sudah ter-install di HP)
+function isPWAInstalled() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+    || window.navigator.standalone === true 
+    || document.referrer.includes('android-app://');
+  const wasInstalled = localStorage.getItem('st_pwa_installed') === 'true';
+  return isStandalone || wasInstalled;
+}
+
+function updatePWAInstallUI() {
+  const installCard = document.getElementById('pwa-install-card');
+  if (!installCard) return;
+
+  // Jika sudah ter-install sebagai aplikasi, HAPUS/SEMBUNYIKAN kartu ini sepenuhnya
+  if (isPWAInstalled()) {
+    installCard.classList.add('hidden');
+    installCard.style.display = 'none';
+  } else {
+    // Tampilkan hanya jika dibuka di browser biasa
+    installCard.classList.remove('hidden');
+    installCard.style.display = 'flex';
+  }
+}
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
+  updatePWAInstallUI();
+});
+
+// Event saat aplikasi sukses terinstall di HP
+window.addEventListener('appinstalled', () => {
+  localStorage.setItem('st_pwa_installed', 'true');
   const installCard = document.getElementById('pwa-install-card');
-  if (installCard) installCard.classList.remove('hidden');
+  if (installCard) {
+    installCard.classList.add('hidden');
+    installCard.style.display = 'none';
+  }
+  deferredInstallPrompt = null;
 });
 
 function installPWA() {
@@ -1114,21 +1149,29 @@ function installPWA() {
     deferredInstallPrompt.prompt();
     deferredInstallPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
+        localStorage.setItem('st_pwa_installed', 'true');
         const installCard = document.getElementById('pwa-install-card');
-        if (installCard) installCard.classList.add('hidden');
+        if (installCard) {
+          installCard.classList.add('hidden');
+          installCard.style.display = 'none';
+        }
       }
       deferredInstallPrompt = null;
     });
   } else {
-    // Petunjuk manual jika browser belum memicu event bawaan (misal Safari di iPhone)
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIOS) {
       alert('Untuk memasang di iPhone/iPad: Tekan tombol Bagikan (Share) ⎋ di browser Safari, lalu pilih "Tambahkan ke Layar Utama" (+).');
     } else {
-      alert('Untuk memasang di Android: Buka menu titik tiga (⋮) di pojok kanan atas Chrome, lalu pilih "Pasang aplikasi" atau "Tambahkan ke Layar Utama".');
+      alert('Untuk memasang di Android: Buka menu titik tiga (⋮) di browser Chrome, lalu pilih "Pasang aplikasi" atau "Tambahkan ke Layar Utama".');
     }
   }
 }
+
+// Inisialisasi pengecekan PWA saat halaman dibuka
+document.addEventListener('DOMContentLoaded', () => {
+  updatePWAInstallUI();
+});
 
 window.installPWA = installPWA;
 window.syncNotificationUI = syncNotificationUI;

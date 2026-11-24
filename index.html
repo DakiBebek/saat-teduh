@@ -763,19 +763,19 @@
           </div>
         </div>
 
-        <!-- Install App Banner (PWA) -->
-        <div id="pwa-install-card" class="bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-2xl shadow-md p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <!-- Install App Banner (PWA) - Hanya tampil jika dibuka di browser biasa dan belum di-install -->
+        <div id="pwa-install-card" class="hidden bg-stone-900 border border-stone-800 text-white rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shrink-0">
-              📲
+            <div class="w-10 h-10 rounded-xl bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-500 text-lg shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
             </div>
             <div>
-              <h4 class="text-sm sm:text-base font-bold font-display-title">Pasang di Layar Utama HP</h4>
-              <p class="text-xs text-amber-100 mt-0.5">Buka lebih cepat seperti aplikasi resmi tanpa membuka browser.</p>
+              <h4 class="text-xs sm:text-sm font-bold text-stone-100 font-display-title">Pasang di Layar Utama HP</h4>
+              <p class="text-[11px] text-stone-400 mt-0.5">Buka langsung seperti aplikasi tanpa perlu lewat browser.</p>
             </div>
           </div>
-          <button id="btn-pwa-install" onclick="installPWA()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-amber-900 hover:bg-amber-50 shadow-sm transition-all text-center">
-            Pasang Aplikasi Sekarang
+          <button id="btn-pwa-install" onclick="installPWA()" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white transition-all text-center">
+            Pasang Aplikasi
           </button>
         </div>
 
