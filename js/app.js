@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSermonHandlers();
   setupSettingsHandlers();
   setupNotificationSettings();
+
+  // Periksa apakah pop-up ayat harian perlu ditampilkan hari ini
+  setTimeout(() => {
+    checkDailyVerseModal();
+  }, 800);
 });
 
 // -------------------------------------------------------------
@@ -1175,5 +1180,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.installPWA = installPWA;
 window.syncNotificationUI = syncNotificationUI;
+
+// -------------------------------------------------------------
+// POP-UP AYAT HARIAN (FIRST VISIT OF THE DAY)
+// -------------------------------------------------------------
+function checkDailyVerseModal() {
+  // Hanya tampilkan jika pengguna sudah login atau dalam mode tamu (halaman utama aktif)
+  const appContainer = document.getElementById('app-container');
+  if (appContainer && appContainer.classList.contains('hidden')) {
+    return; // Masih di halaman login
+  }
+
+  const todayIso = getIsoDate(new Date());
+  const lastSeenDate = localStorage.getItem('st_last_seen_verse_modal');
+
+  // Jika hari ini belum melihat pop-up, buka otomatis
+  if (lastSeenDate !== todayIso) {
+    openDailyVerseModal();
+  }
+}
+
+function openDailyVerseModal() {
+  const modal = document.getElementById('daily-verse-modal');
+  if (!modal) return;
+
+  const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(new Date()) : null;
+  if (!verse) return;
+
+  const dateEl = document.getElementById('modal-verse-date');
+  const textEl = document.getElementById('modal-verse-text');
+  const refEl = document.getElementById('modal-verse-ref');
+  const promptEl = document.getElementById('modal-verse-prompt');
+
+  if (dateEl) dateEl.textContent = verse.dateString || '';
+  if (textEl) textEl.textContent = `"${verse.text}"`;
+  if (refEl) refEl.textContent = `— ${verse.passage} (TB)`;
+  if (promptEl) promptEl.textContent = verse.reflectionPrompt || 'Renungkan kebaikan firman Tuhan hari ini.';
+
+  modal.style.display = 'flex';
+}
+
+function closeDailyVerseModal() {
+  const modal = document.getElementById('daily-verse-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+  // Tandai bahwa hari ini pop-up sudah dilihat
+  const todayIso = getIsoDate(new Date());
+  localStorage.setItem('st_last_seen_verse_modal', todayIso);
+}
+
+function copyModalVerse() {
+  const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(new Date()) : null;
+  if (!verse) return;
+
+  const fullText = `✝️ *Ayat Hari Ini*\n"${verse.text}"\n— *${verse.passage}* (TB)\n\n💭 ${verse.reflectionPrompt || ''}`;
+  navigator.clipboard.writeText(fullText).then(() => {
+    const copyText = document.getElementById('modal-copy-text');
+    if (copyText) {
+      copyText.textContent = 'Tersalin! ✓';
+      setTimeout(() => {
+        copyText.textContent = 'Salin';
+      }, 2000);
+    }
+  });
+}
+
+window.checkDailyVerseModal = checkDailyVerseModal;
+window.openDailyVerseModal = openDailyVerseModal;
+window.closeDailyVerseModal = closeDailyVerseModal;
+window.copyModalVerse = copyModalVerse;
+
 
 

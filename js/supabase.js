@@ -80,6 +80,13 @@ function toggleAppVisibility(isLoggedInOrGuest) {
   if (isLoggedInOrGuest) {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appContainer) appContainer.classList.remove('hidden');
+
+    // Cek apakah pop-up ayat harian perlu ditampilkan hari ini
+    if (typeof checkDailyVerseModal === 'function') {
+      setTimeout(() => {
+        checkDailyVerseModal();
+      }, 500);
+    }
   } else {
     if (loginScreen) loginScreen.classList.remove('hidden');
     if (appContainer) appContainer.classList.add('hidden');

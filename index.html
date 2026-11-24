@@ -851,6 +851,55 @@
 
   </div> <!-- Akhir dari #app-container -->
 
+  <!-- ======================================================== -->
+  <!-- MODAL POP-UP AYAT HARIAN (FIRST VISIT OF THE DAY)        -->
+  <!-- ======================================================== -->
+  <div id="daily-verse-modal" style="display: none;" class="fixed inset-0 z-[90] bg-black/75 backdrop-blur-sm items-center justify-center p-4 sm:p-6 transition-all duration-300">
+    <div class="relative w-full max-w-md bg-stone-900 border border-stone-800 text-white rounded-3xl p-6 sm:p-7 shadow-2xl overflow-hidden animate-modal-scale">
+      
+      <!-- Close Button -->
+      <button type="button" onclick="closeDailyVerseModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-800/80 hover:bg-stone-700 text-stone-400 hover:text-white flex items-center justify-center transition-colors text-xs" title="Tutup">
+        ✕
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+        <span class="text-[11px] font-bold uppercase tracking-widest text-amber-400">Ayat Hari Ini</span>
+        <span class="text-[11px] text-stone-500">•</span>
+        <span id="modal-verse-date" class="text-[11px] text-stone-400 font-medium capitalize"></span>
+      </div>
+
+      <!-- Scripture Quote -->
+      <blockquote class="my-4 pl-4 border-l-2 border-amber-500/80">
+        <p id="modal-verse-text" class="text-base sm:text-lg font-serif-bible italic font-normal text-stone-100 leading-relaxed">
+          "Memuat ayat..."
+        </p>
+        <footer id="modal-verse-ref" class="mt-2 text-xs sm:text-sm font-bold text-amber-400 font-serif-bible tracking-wide">
+          — 
+        </footer>
+      </blockquote>
+
+      <!-- Reflection prompt -->
+      <div id="modal-verse-prompt-box" class="mt-4 p-3.5 rounded-xl bg-stone-800/60 border border-stone-800 text-xs text-stone-300 italic leading-relaxed">
+        <span class="font-semibold text-stone-400 not-italic block text-[10px] uppercase tracking-wider mb-1">Perenungan:</span>
+        <span id="modal-verse-prompt"></span>
+      </div>
+
+      <!-- Action Button -->
+      <div class="mt-6 flex items-center gap-2">
+        <button type="button" onclick="closeDailyVerseModal()" class="flex-1 py-3 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white shadow-sm transition-all text-center">
+          Mulai Saat Teduh
+        </button>
+        <button type="button" onclick="copyModalVerse()" id="btn-modal-copy" class="px-4 py-3 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-700 transition-colors flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          <span id="modal-copy-text">Salin</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
