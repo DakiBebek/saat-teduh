@@ -1182,7 +1182,7 @@ window.installPWA = installPWA;
 window.syncNotificationUI = syncNotificationUI;
 
 // -------------------------------------------------------------
-// POP-UP AYAT HARIAN (FIRST VISIT OF THE DAY)
+// POP-UP AYAT HARIAN (MUNCUL TIAP KALI BUKA WEB)
 // -------------------------------------------------------------
 function checkDailyVerseModal() {
   // Hanya tampilkan jika pengguna sudah login atau dalam mode tamu (halaman utama aktif)
@@ -1191,13 +1191,8 @@ function checkDailyVerseModal() {
     return; // Masih di halaman login
   }
 
-  const todayIso = getIsoDate(new Date());
-  const lastSeenDate = localStorage.getItem('st_last_seen_verse_modal');
-
-  // Jika hari ini belum melihat pop-up, buka otomatis
-  if (lastSeenDate !== todayIso) {
-    openDailyVerseModal();
-  }
+  // Buka pop-up otomatis setiap kali aplikasi/web dibuka
+  openDailyVerseModal();
 }
 
 function openDailyVerseModal() {
@@ -1227,9 +1222,6 @@ function closeDailyVerseModal() {
     modal.classList.remove('active');
     modal.style.setProperty('display', 'none', 'important');
   }
-  // Tandai bahwa hari ini pop-up sudah dilihat
-  const todayIso = getIsoDate(new Date());
-  localStorage.setItem('st_last_seen_verse_modal', todayIso);
 }
 
 function copyModalVerse() {
