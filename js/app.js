@@ -1205,25 +1205,27 @@ function openDailyVerseModal() {
   if (!modal) return;
 
   const verse = typeof getVerseOfTheDay === 'function' ? getVerseOfTheDay(new Date()) : null;
-  if (!verse) return;
+  if (verse) {
+    const dateEl = document.getElementById('modal-verse-date');
+    const textEl = document.getElementById('modal-verse-text');
+    const refEl = document.getElementById('modal-verse-ref');
+    const promptEl = document.getElementById('modal-verse-prompt');
 
-  const dateEl = document.getElementById('modal-verse-date');
-  const textEl = document.getElementById('modal-verse-text');
-  const refEl = document.getElementById('modal-verse-ref');
-  const promptEl = document.getElementById('modal-verse-prompt');
+    if (dateEl) dateEl.textContent = verse.dateString || '';
+    if (textEl) textEl.textContent = `"${verse.text}"`;
+    if (refEl) refEl.textContent = `— ${verse.passage} (TB)`;
+    if (promptEl) promptEl.textContent = verse.reflectionPrompt || 'Renungkan kebaikan firman Tuhan hari ini.';
+  }
 
-  if (dateEl) dateEl.textContent = verse.dateString || '';
-  if (textEl) textEl.textContent = `"${verse.text}"`;
-  if (refEl) refEl.textContent = `— ${verse.passage} (TB)`;
-  if (promptEl) promptEl.textContent = verse.reflectionPrompt || 'Renungkan kebaikan firman Tuhan hari ini.';
-
-  modal.style.display = 'flex';
+  modal.classList.add('active');
+  modal.style.setProperty('display', 'flex', 'important');
 }
 
 function closeDailyVerseModal() {
   const modal = document.getElementById('daily-verse-modal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
   }
   // Tandai bahwa hari ini pop-up sudah dilihat
   const todayIso = getIsoDate(new Date());
