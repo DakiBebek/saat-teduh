@@ -314,7 +314,7 @@ function setupReflectionAutosave() {
       saveCurrentReflection();
 
       if (isNowComplete) {
-        triggerConfettiCelebration();
+        triggerDuolingoCelebration();
       }
 
       updateStreakDisplay();
@@ -964,8 +964,6 @@ function applyFontSize(size) {
 // -------------------------------------------------------------
 function updateStreakDisplay() {
   const streakBadge = document.getElementById('streak-count-display');
-  if (!streakBadge) return;
-
   let currentStreak = 0;
   let checkDate = new Date();
 
@@ -992,8 +990,140 @@ function updateStreakDisplay() {
     }
   }
 
-  streakBadge.textContent = `${currentStreak} Hari Berturut-turut`;
+  if (streakBadge) {
+    streakBadge.textContent = `${currentStreak} Hari Berturut-turut`;
+  }
+  return currentStreak;
 }
+
+function playCelebrationChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const startTime = ctx.currentTime + idx * 0.09;
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.45);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + 0.46);
+    });
+  } catch (e) {
+    console.warn('Celebration chime skipped:', e);
+  }
+}
+
+function triggerDuolingoCelebration() {
+  const overlay = document.getElementById('celebration-overlay');
+  const streakNumEl = document.getElementById('celebration-streak-num');
+  const weekGrid = document.getElementById('celebration-week-grid');
+  const subtitleEl = document.getElementById('celebration-subtitle');
+
+  const streak = updateStreakDisplay();
+
+  // Jalankan efek suara & getar haptik
+  playCelebrationChime();
+  if ('vibrate' in navigator) {
+    try { navigator.vibrate([100, 50, 150]); } catch (e) {}
+  }
+
+  // Jalankan confetti
+  triggerConfettiCelebration();
+
+  if (!overlay) return;
+
+  // Animasi angka streak naik (0 atau streak-1 ke streak)
+  if (streakNumEl) {
+    const startVal = Math.max(0, streak - 1);
+    streakNumEl.textContent = startVal;
+    setTimeout(() => {
+      streakNumEl.textContent = streak;
+      streakNumEl.classList.add('scale-110');
+      setTimeout(() => streakNumEl.classList.remove('scale-110'), 250);
+    }, 350);
+  }
+
+  if (subtitleEl) {
+    if (streak <= 1) {
+      subtitleEl.textContent = 'Langkah awal yang indah! Terus bangun kebiasaan saat teduhmu.';
+    } else if (streak < 7) {
+      subtitleEl.textContent = `Luar biasa! ${streak} hari berturut-turut kamu setia bersama Tuhan.`;
+    } else {
+      subtitleEl.textContent = `Iman yang bertumbuh! ${streak} hari tanpa henti merenungkan Firman-Nya.`;
+    }
+  }
+
+  // Render 7 hari minggu ini (Minggu - Sabtu) ala Duolingo
+  if (weekGrid) {
+    const dayLabels = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    const today = new Date();
+    const currentDayIdx = today.getDay(); // 0 = Min
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - currentDayIdx);
+
+    weekGrid.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startOfWeek);
+      d.setDate(startOfWeek.getDate() + i);
+      const iso = getIsoDate(d);
+      const isDone = !!(AppState.reflections[iso] && AppState.reflections[iso].isCompleted);
+      const isToday = i === currentDayIdx;
+
+      const col = document.createElement('div');
+      col.className = 'flex flex-col items-center gap-1.5';
+
+      const label = document.createElement('span');
+      label.className = `text-[10px] font-bold uppercase ${isToday ? 'text-amber-400' : 'text-stone-500'}`;
+      label.textContent = dayLabels[i];
+
+      const circle = document.createElement('div');
+      if (isDone) {
+        circle.className = `w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center shadow-md shadow-amber-500/20 ${isToday ? 'day-pill-pop ring-2 ring-amber-300' : ''}`;
+        if (isToday) circle.style.animationDelay = '0.45s';
+        circle.innerHTML = '<svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>';
+      } else {
+        circle.className = `w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-stone-800 border ${isToday ? 'border-amber-500/60' : 'border-stone-700'} text-stone-600 flex items-center justify-center text-xs font-bold`;
+        circle.textContent = d.getDate();
+      }
+
+      col.appendChild(label);
+      col.appendChild(circle);
+      weekGrid.appendChild(col);
+    }
+  }
+
+  // Re-trigger animasi elemen di dalam overlay
+  overlay.querySelectorAll('.celebration-pop, .celebration-slide-up').forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight; // force reflow
+    el.style.animation = '';
+  });
+
+  overlay.classList.add('active');
+  overlay.style.setProperty('display', 'flex', 'important');
+}
+
+function closeCelebrationOverlay() {
+  const overlay = document.getElementById('celebration-overlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    overlay.style.setProperty('display', 'none', 'important');
+  }
+}
+
+window.closeCelebrationOverlay = closeCelebrationOverlay;
 
 function triggerConfettiCelebration() {
   const canvas = document.getElementById('confetti-canvas');

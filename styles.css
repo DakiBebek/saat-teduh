@@ -70,6 +70,90 @@ html, body {
   }
 }
 
+/* Duolingo-style Dynamic Celebration Animations */
+#celebration-overlay.active {
+  display: flex !important;
+}
+
+.celebration-pop {
+  animation: celebrationPop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes celebrationPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-12deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.celebration-flame {
+  animation: flameWiggle 1.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes flameWiggle {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.06) rotate(2deg); }
+}
+
+.celebration-ring {
+  animation: ringPulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.celebration-ring-2 {
+  animation: ringPulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s infinite;
+}
+
+@keyframes ringPulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+.celebration-slide-up {
+  opacity: 0;
+  animation: celebrationSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes celebrationSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.day-pill-pop {
+  animation: dayPillPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dayPillPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* Equalizer Bars Animation untuk Ambient Audio */
 .equalizer-bar {
   animation: equalize 1.2s infinite ease-in-out;
